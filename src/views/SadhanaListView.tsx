@@ -247,7 +247,11 @@ const SadhanaListView: React.FC = () => {
 						value={sadhana.japaRounds ? sadhana.japaRounds.toString() : ""}
 						onChangeText={(value) => handleJapaRoundsChange(index, value)}
 					/>
-					<Button variant="clear" onPress={() => openEditModal(index)}>
+					<Button
+						variant="clear"
+						onPress={() => openEditModal(index)}
+						style={styles.editBtn}
+					>
 						<MaterialIcons name="edit" color="gray" size={22} />
 					</Button>
 				</View>
@@ -314,12 +318,7 @@ const SadhanaListView: React.FC = () => {
 					initialNumToRender={20}
 				/>
 
-				{/* List of days */}
-				{/* {sadhanaList.map((sadhana, index) => {
-						renderItem({ item: sadhana, index });
-					})} */}
-
-				<View style={styles.row}>
+				<View style={[styles.row, styles.footer]}>
 					<View style={styles.flexRow}>
 						<Text style={styles.dayText}>Sum:</Text>
 						<View style={styles.mangalaSumContainer}>
@@ -368,7 +367,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		marginHorizontal: 10,
+		marginTop: -10,
 	},
 	currentMonth: {
 		fontSize: 18,
@@ -378,18 +377,13 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		fontWeight: "bold",
 	},
-	prevButton: {
-		marginLeft: -20,
-	},
-	nextButton: {
-		marginRight: -20,
-	},
 	headerRow: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		borderBottomWidth: 1,
 		borderColor: "lightgray",
 		padding: 10,
+		marginTop: -10,
 		backgroundColor: "#FAFAFA",
 	},
 	row: {
@@ -440,6 +434,12 @@ const styles = StyleSheet.create({
 	},
 	note: {
 		marginTop: 2,
+	},
+	editBtn: {
+		marginRight: -8,
+	},
+	footer: {
+		marginBottom: 40,
 	},
 });
 

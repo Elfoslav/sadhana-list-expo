@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: "gray",
 		borderRadius: 5,
-		paddingVertical: 10,
-		paddingHorizontal: 15,
+		paddingVertical: 5,
+		paddingHorizontal: 10,
 		height: 100,
 	},
 	btnLg: {
