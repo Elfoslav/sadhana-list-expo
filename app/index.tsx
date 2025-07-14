@@ -9,20 +9,19 @@ import { registerForPushNotificationsAsync } from "@/src/lib/functions";
 export default function Home() {
 	useEffect(() => {
 		registerForPushNotificationsAsync();
-	}, []);
 
-	// Second, call scheduleNotificationAsync()
-	Notifications.scheduleNotificationAsync({
-		content: {
-			title: "Sadhana List",
-			body: "Did you add your sadhana today?",
-		},
-		trigger: {
-			type: SchedulableTriggerInputTypes.DAILY,
-			hour: 15,
-			minute: 50,
-		},
-	});
+		Notifications.scheduleNotificationAsync({
+			content: {
+				title: "Sadhana List",
+				body: "Did you add your sadhana today?",
+			},
+			trigger: {
+				type: SchedulableTriggerInputTypes.DAILY,
+				hour: 15,
+				minute: 50,
+			},
+		});
+	}, []);
 
 	return (
 		<View style={commonStyles.homeContainer}>

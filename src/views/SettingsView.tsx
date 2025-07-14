@@ -84,13 +84,12 @@ export default function SettingsView() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingVertical: 10,
+		paddingVertical: 15,
 		paddingHorizontal: 20,
 	},
 	content: {
 		flex: 1,
 		justifyContent: "space-between",
-		marginTop: -15,
 	},
 	row: {
 		flexDirection: "row",

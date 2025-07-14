@@ -1,12 +1,9 @@
-import { Stack, useRouter, usePathname } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function Layout() {
 	const router = useRouter();
-	const pathname = usePathname();
-	// Hide settings icon on the settings page
-	const showSettingsButton = pathname !== "/settings";
 	return (
 		<Stack
 			screenOptions={{
@@ -17,12 +14,11 @@ export default function Layout() {
 				headerTitleStyle: {
 					fontWeight: "bold",
 				},
-				headerRight: () =>
-					showSettingsButton ? (
-						<Pressable onPress={() => router.push("/settings")}>
-							<Ionicons name="settings-outline" size={20} color="black" />
-						</Pressable>
-					) : null,
+				headerRight: () => (
+					<Pressable onPress={() => router.push("/settings")}>
+						<Ionicons name="settings-outline" size={20} color="black" />
+					</Pressable>
+				),
 			}}
 		>
 			<Stack.Screen
@@ -41,6 +37,7 @@ export default function Layout() {
 				name="settings/index"
 				options={{
 					title: "Settings",
+					headerRight: () => null,
 				}}
 			/>
 		</Stack>
