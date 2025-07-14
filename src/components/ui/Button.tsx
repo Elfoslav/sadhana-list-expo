@@ -8,6 +8,7 @@ type ButtonProps = {
 	variant?: "primary" | "secondary" | "danger" | "clear"; // extended types
 	size?: "sm" | "md" | "lg";
 	style?: ViewStyle | ViewStyle[];
+	disabled?: boolean;
 };
 
 const Button = ({
@@ -17,16 +18,28 @@ const Button = ({
 	variant = "primary", // default to primary
 	size = "md",
 	style,
+	disabled = false,
 }: ButtonProps) => {
+	const baseStyle = [
+		styles.base,
+		variantStyles[variant],
+		sizeStyles[size],
+		disabled && styles.disabled,
+		style,
+	];
+	const textStyle = [
+		styles.text,
+		textVariantStyles[variant],
+		disabled && styles.disabledText,
+	];
 	return (
 		<TouchableOpacity
 			onPress={onPress}
 			activeOpacity={0.85}
-			style={[styles.base, variantStyles[variant], sizeStyles[size], style]}
+			style={baseStyle}
+			disabled={disabled}
 		>
-			{children ?? (
-				<Text style={[styles.text, textVariantStyles[variant]]}>{title}</Text>
-			)}
+			{children ?? <Text style={textStyle}>{title}</Text>}
 		</TouchableOpacity>
 	);
 };
@@ -40,6 +53,10 @@ const styles = StyleSheet.create({
 	text: {
 		fontWeight: "600",
 	},
+	disabled: {
+		opacity: 0.5,
+	},
+	disabledText: {},
 });
 
 const variantStyles = {

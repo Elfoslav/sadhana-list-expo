@@ -29,7 +29,22 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
-    ]
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/iskcon-logo.png",
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": false
+        }
+      ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d2473c22-2faf-4e37-801d-210ed75e900c"
+      }
+    }
   }
 }

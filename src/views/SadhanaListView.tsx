@@ -3,7 +3,6 @@ import {
 	View,
 	Text,
 	StyleSheet,
-	ScrollView,
 	SafeAreaView,
 	ActivityIndicator,
 	TextInput,
@@ -215,7 +214,10 @@ const SadhanaListView: React.FC = () => {
 		japaSum += sadhana.japaRounds ? sadhana.japaRounds : 0;
 
 		return (
-			<View key={index} style={[styles.row, isToday ? styles.activeRow : null]}>
+			<SafeAreaView
+				key={index}
+				style={[styles.row, isToday ? styles.activeRow : null]}
+			>
 				<View style={styles.flexRow}>
 					<Text style={styles.dayText}>
 						{getAbbreviatedDayName(sadhana.date)}
@@ -261,7 +263,7 @@ const SadhanaListView: React.FC = () => {
 						<Text>{shortenString(sadhana.note, 50)}</Text>
 					</View>
 				)}
-			</View>
+			</SafeAreaView>
 		);
 	};
 
@@ -271,22 +273,14 @@ const SadhanaListView: React.FC = () => {
 			<View style={styles.table}>
 				{/* Month navigation buttons */}
 				<View style={styles.monthNav}>
-					<Button
-						variant="clear"
-						onPress={switchToPreviousMonth}
-						style={styles.prevButton}
-					>
+					<Button variant="clear" onPress={switchToPreviousMonth}>
 						<Text style={styles.navIcon}>&#8249;</Text>
 					</Button>
 					<Text style={styles.currentMonth}>
 						{currentDate.toLocaleString("default", { month: "long" })}{" "}
 						{currentDate.getFullYear()}
 					</Text>
-					<Button
-						variant="clear"
-						onPress={switchToNextMonth}
-						style={styles.nextButton}
-					>
+					<Button variant="clear" onPress={switchToNextMonth}>
 						<Text style={styles.navIcon}>&#8250;</Text>
 					</Button>
 				</View>
