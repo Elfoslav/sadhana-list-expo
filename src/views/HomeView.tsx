@@ -90,7 +90,7 @@ function HomeView() {
 				<View style={commonStyles.container}>
 					<Image
 						style={styles.logo}
-						source={require("../assets/images/iskcon-logo.png")}
+						source={require("../../assets/iskcon-logo.png")}
 					/>
 					<TextInput
 						style={commonStyles.textInput}

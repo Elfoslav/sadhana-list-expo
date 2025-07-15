@@ -4,21 +4,13 @@
     "slug": "sadhanaList",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/iskcon-logo.png",
+    "icon": "./assets/iskcon-logo-512x512.png",
     "scheme": "sadhanalist",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
-      "package": "com.hromnik.sadhanaList",
-      "versionCode": 1,
+      "package": "com.sadhanalist",
+      "versionCode": 6,
       "adaptiveIcon": {
         "foregroundImage": "./assets/iskcon-logo.png",
         "backgroundColor": "#ffffff"
@@ -45,6 +37,9 @@
       "eas": {
         "projectId": "d2473c22-2faf-4e37-801d-210ed75e900c"
       }
+    },
+    "ios": {
+      "bundleIdentifier": "com.sadhanalist"
     }
   }
 }
