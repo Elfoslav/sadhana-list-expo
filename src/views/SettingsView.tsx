@@ -84,7 +84,7 @@ export default function SettingsView() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingVertical: 15,
+		paddingBottom: 15,
 		paddingHorizontal: 20,
 	},
 	content: {

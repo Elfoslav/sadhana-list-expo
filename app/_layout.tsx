@@ -16,7 +16,7 @@ export default function Layout() {
 				},
 				headerRight: () => (
 					<Pressable onPress={() => router.push("/settings")}>
-						<Ionicons name="settings-outline" size={20} color="black" />
+						<Ionicons name="settings-outline" size={22} color="black" />
 					</Pressable>
 				),
 			}}

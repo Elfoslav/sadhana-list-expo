@@ -67,10 +67,10 @@ function HomeView() {
 			if (foundUser) {
 				setUser(foundUser);
 				setUsername(foundUser.username);
-				// router.push({
-				// 	pathname: "/sadhana-list",
-				// 	params: { username },
-				// });
+				router.push({
+					pathname: "/sadhana-list",
+					params: { username: foundUser.username },
+				});
 			}
 		};
 
