@@ -51,7 +51,10 @@ function HomeView() {
 
 		setIsLoading(false);
 
-		router.push("/sadhana-list");
+		router.push({
+			pathname: "/sadhana-list",
+			params: { username },
+		});
 	};
 
 	const getSadhanaButtonText = () => {
@@ -60,11 +63,14 @@ function HomeView() {
 
 	useEffect(() => {
 		const getUser = async () => {
-			const foundUser = await usersService.getUser();
+			const foundUser = await usersService.getUser(username);
 			if (foundUser) {
 				setUser(foundUser);
 				setUsername(foundUser.username);
-				// router.push("/sadhana-list");
+				// router.push({
+				// 	pathname: "/sadhana-list",
+				// 	params: { username },
+				// });
 			}
 		};
 

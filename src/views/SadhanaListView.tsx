@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
 import {
 	View,
 	Text,
@@ -19,6 +20,12 @@ import SadhanaModal from "../components/SadhanaModal";
 import commonStyles from "../styles/commonStyles";
 
 const SadhanaListView: React.FC = () => {
+	const { username } = useLocalSearchParams() as { username: string };
+
+	if (!username) {
+		return <Text>No username provided</Text>;
+	}
+
 	const listRef = useRef<FlatList>(null);
 	const usersService = new UsersService();
 	const sadhanaManager = new SadhanaManager();
@@ -36,7 +43,11 @@ const SadhanaListView: React.FC = () => {
 	let gauraAratiSum = 0;
 	let japaSum = 0;
 
-	async function generateSadhanaList(date: Date): Promise<SadhanaData[]> {
+	async function generateSadhanaList(
+		date: Date,
+		username: string
+	): Promise<SadhanaData[]> {
+		console.log("generate sadhanaList", username);
 		const currentYear = date.getFullYear();
 		const currentMonth = date.getMonth();
 		const numberOfDaysInMonth = new Date(
@@ -44,7 +55,7 @@ const SadhanaListView: React.FC = () => {
 			currentMonth + 1,
 			0
 		).getDate();
-		const foundUser = (await usersService.getUser()) as User;
+		const foundUser = (await usersService.getUser(username)) as User;
 
 		return Array.from({ length: numberOfDaysInMonth }, (_, i) => i + 1).map(
 			(day) => {
@@ -180,7 +191,7 @@ const SadhanaListView: React.FC = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			setIsLoading(true);
-			const sadhanaData = await generateSadhanaList(currentDate);
+			const sadhanaData = await generateSadhanaList(currentDate, username);
 			setSadhanaList(sadhanaData);
 			setIsLoading(false);
 		};
@@ -190,7 +201,7 @@ const SadhanaListView: React.FC = () => {
 
 	useEffect(() => {
 		const getUser = async () => {
-			const foundUser = await usersService.getUser();
+			const foundUser = await usersService.getUser(username);
 			if (foundUser) {
 				setUser(foundUser);
 			}

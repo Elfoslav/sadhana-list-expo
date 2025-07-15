@@ -2,15 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import User from '../models/User';
 import { dateReviver } from '../lib/functions';
 
-const USER = 'user';
-
 class UserAsyncStore {
 
   async createUser(newUser: User) {
     try {
-      const existingUser = await AsyncStorage.getItem(USER);
+      const existingUser = await AsyncStorage.getItem(newUser.username);
       if (!existingUser) {
-        await AsyncStorage.setItem(USER, JSON.stringify(newUser));
+        await AsyncStorage.setItem(newUser.username, JSON.stringify(newUser));
         return newUser;
       }
 
@@ -22,9 +20,11 @@ class UserAsyncStore {
   }
 
   // Method to read user data
-  async getUser(): Promise<User | null> {
+  async getUser(username?: string): Promise<User | null> {
     try {
-      const user = await AsyncStorage.getItem(USER);
+      if (!username) return null;
+
+      const user = await AsyncStorage.getItem(username);
       if (user !== null) {
         return JSON.parse(user, dateReviver);
       }
@@ -40,7 +40,7 @@ class UserAsyncStore {
   // Method to write user data
   async saveUser(user: User) {
     try {
-      await AsyncStorage.setItem(USER, JSON.stringify(user))
+      await AsyncStorage.setItem(user.username, JSON.stringify(user))
     } catch (error) {
       console.log('saveUser error', error);
       throw error;

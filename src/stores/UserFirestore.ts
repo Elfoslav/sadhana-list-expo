@@ -1,19 +1,20 @@
-import firestore from '@react-native-firebase/firestore';
-import User from '../models/User';
-import { dateReviver } from '../lib/functions';
+// services/UserFirestore.ts
+import { db } from "../lib/firebase";
+import {
+  doc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
+import User from "../models/User";
+import { dateReviver } from "../lib/functions";
 
 class UserFirestore {
-  private db;
-
-  constructor() {
-    this.db = firestore();
-  }
-
   async createUser(newUser: User) {
     try {
-      const userDoc = await this.db.collection('users').doc(newUser.username).get();
-      console.log('firestore userDoc.exists', userDoc.exists);
-      if (!userDoc.exists) {
+      const userRef = doc(db, "users", newUser.username);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
         await this.saveUser(newUser);
         return newUser;
       }
@@ -22,23 +23,24 @@ class UserFirestore {
     }
   }
 
-  // Method to read user data
-  async getUser(username: string) {
+  async getUser(username?: string) {
+    if (!username) {
+      return null;
+    }
+
     try {
-      const userDoc = await this.db.collection('users').doc(username).get();
-      if (userDoc.exists) {
+      const userRef = doc(db, "users", username || '');
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
         const user = userDoc.data();
-        console.log('getUser: ', user);
 
         if (user && user.sadhanaData) {
           user.sadhanaData = JSON.parse(user.sadhanaData, dateReviver);
         }
 
-        console.log('getUser parsed: ', user);
-
         return user;
       } else {
-        console.log('user does not exist', username);
         return null;
       }
     } catch (error) {
@@ -46,15 +48,14 @@ class UserFirestore {
     }
   }
 
-  // Method to write user data
   async saveUser(user: User) {
     try {
-      await this.db.collection('users').doc(user.username).set({
+      const userRef = doc(db, "users", user.username);
+      await setDoc(userRef, {
         username: user.username,
-        sadhanaData: JSON.stringify(user.sadhanaData)
+        sadhanaData: JSON.stringify(user.sadhanaData),
       });
     } catch (error) {
-      console.log('saveUser error', error);
       throw error;
     }
   }
