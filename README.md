@@ -28,7 +28,7 @@ A spiritual habit tracker built with **Expo SDK 53** and **React Native**, desig
 ```bash
 git clone https://github.com/your-username/sadhana-list-app.git
 cd sadhana-list-app
-npm install
+yarn install
 ```
 
 ### 🔐 Environment Variables
