@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import {
 	View,
-	SafeAreaView,
 	StyleSheet,
 	StatusBar,
 	ScrollView,
@@ -80,7 +79,7 @@ function HomeView() {
 	}, []);
 
 	return (
-		<SafeAreaView style={backgroundStyle}>
+		<View style={backgroundStyle}>
 			<StatusBar
 				barStyle={isDarkMode ? "light-content" : "dark-content"}
 				backgroundColor={backgroundStyle.backgroundColor}
@@ -113,7 +112,7 @@ function HomeView() {
 					</TouchableOpacity>
 				</View>
 			</ScrollView>
-		</SafeAreaView>
+		</View>
 	);
 }
 

@@ -7,7 +7,6 @@ import {
 	showNotification,
 } from "../lib/functions";
 import SettingsService from "../services/SettingsService";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SettingsView() {
 	const router = useRouter();
@@ -53,7 +52,7 @@ export default function SettingsView() {
 	};
 
 	return (
-		<SafeAreaView style={styles.container}>
+		<View style={styles.container}>
 			<View style={styles.content}>
 				<View style={styles.row}>
 					<Text style={styles.label}>Allow notifications</Text>
@@ -77,7 +76,7 @@ export default function SettingsView() {
 					<Button title="Cancel" variant="secondary" onPress={handleCancel} />
 				</View>
 			</View>
-		</SafeAreaView>
+		</View>
 	);
 }
 
@@ -90,6 +89,7 @@ const styles = StyleSheet.create({
 	content: {
 		flex: 1,
 		justifyContent: "space-between",
+		marginTop: 10,
 	},
 	row: {
 		flexDirection: "row",

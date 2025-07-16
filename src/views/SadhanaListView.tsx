@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import {
 	View,
 	Text,
 	StyleSheet,
-	SafeAreaView,
 	ActivityIndicator,
 	TextInput,
 	FlatList,
@@ -38,10 +37,26 @@ const SadhanaListView: React.FC = () => {
 	const [isEditModalVisible, setEditModalVisible] = useState(false);
 	const [editingIndex, setEditingIndex] = useState(-1);
 
-	let mangalaSum = 0;
-	let guruPujaSum = 0;
-	let gauraAratiSum = 0;
-	let japaSum = 0;
+	let { mangalaSum, guruPujaSum, gauraAratiSum, japaSum } = useMemo(() => {
+		return {
+			mangalaSum: sadhanaList.reduce(
+				(sum, item) => sum + (item.mangala ? 1 : 0),
+				0
+			),
+			guruPujaSum: sadhanaList.reduce(
+				(sum, item) => sum + (item.guruPuja ? 1 : 0),
+				0
+			),
+			gauraAratiSum: sadhanaList.reduce(
+				(sum, item) => sum + (item.gauraArati ? 1 : 0),
+				0
+			),
+			japaSum: sadhanaList.reduce(
+				(sum, item) => sum + (item.japaRounds ?? 0),
+				0
+			),
+		};
+	}, [sadhanaList]);
 
 	async function generateSadhanaList(
 		date: Date,
@@ -219,16 +234,9 @@ const SadhanaListView: React.FC = () => {
 	}) => {
 		const sadhana = item;
 		const isToday = isSameDay(sadhana.date, new Date());
-		mangalaSum += sadhana.mangala ? 1 : 0;
-		guruPujaSum += sadhana.guruPuja ? 1 : 0;
-		gauraAratiSum += sadhana.gauraArati ? 1 : 0;
-		japaSum += sadhana.japaRounds ? sadhana.japaRounds : 0;
 
 		return (
-			<SafeAreaView
-				key={index}
-				style={[styles.row, isToday ? styles.activeRow : null]}
-			>
+			<View key={index} style={[styles.row, isToday ? styles.activeRow : null]}>
 				<View style={styles.flexRow}>
 					<Text style={styles.dayText}>
 						{getAbbreviatedDayName(sadhana.date)}
@@ -274,13 +282,13 @@ const SadhanaListView: React.FC = () => {
 						<Text>{shortenString(sadhana.note, 50)}</Text>
 					</View>
 				)}
-			</SafeAreaView>
+			</View>
 		);
 	};
 
 	// Render the table as a vertical list
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
+		<View style={{ flex: 1 }}>
 			<View style={styles.table}>
 				{/* Month navigation buttons */}
 				<View style={styles.monthNav}>
@@ -356,7 +364,7 @@ const SadhanaListView: React.FC = () => {
 				confirmModal={confirmEditModal}
 				closeModal={closeEditModal}
 			/>
-		</SafeAreaView>
+		</View>
 	);
 };
 
@@ -444,7 +452,9 @@ const styles = StyleSheet.create({
 		marginRight: -8,
 	},
 	footer: {
-		marginBottom: 40,
+		borderWidth: 1,
+		backgroundColor: "#EAEAEA",
+		borderTopColor: "red",
 	},
 });
 
