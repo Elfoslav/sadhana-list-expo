@@ -10,9 +10,8 @@
     "newArchEnabled": true,
     "android": {
       "package": "com.sadhanalist",
-      "versionCode": 6,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/iskcon-logo.png",
+        "foregroundImage": "./assets/iskcon-logo-512x512.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
@@ -37,9 +36,6 @@
       "eas": {
         "projectId": "d2473c22-2faf-4e37-801d-210ed75e900c"
       }
-    },
-    "ios": {
-      "bundleIdentifier": "com.sadhanalist"
     }
   }
 }

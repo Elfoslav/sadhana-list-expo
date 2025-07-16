@@ -6,8 +6,7 @@ import {
 	TouchableWithoutFeedback,
 	View,
 } from "react-native";
-import Button from "../components/ui/Button";
-import { MaterialIcons } from "@expo/vector-icons";
+import Button from "./ui/Button";
 import SadhanaData from "../models/SadhanaData";
 import { useEffect, useState } from "react";
 import commonStyles from "../styles/commonStyles";

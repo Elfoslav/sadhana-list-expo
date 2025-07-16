@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { View } from "react-native";
 import * as Notifications from "expo-notifications";
-import HomeView from "@/src/views/HomeView";
-import commonStyles from "@/src/styles/commonStyles";
+import HomeView from "../src/views/HomeView";
+import commonStyles from "../src/styles/commonStyles";
 import { SchedulableTriggerInputTypes } from "expo-notifications";
-import { registerForPushNotificationsAsync } from "@/src/lib/functions";
+import { registerForPushNotificationsAsync } from "../src/lib/functions";
 
 export default function Home() {
 	useEffect(() => {

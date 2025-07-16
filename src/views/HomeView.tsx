@@ -43,6 +43,7 @@ function HomeView() {
 		}
 
 		setIsLoading(true);
+		await usersService.saveUsername(username);
 		// create user
 		await usersService.createUser({
 			username,
@@ -63,6 +64,7 @@ function HomeView() {
 
 	useEffect(() => {
 		const getUser = async () => {
+			setUsername((await usersService.getUsername()) || "");
 			const foundUser = await usersService.getUser(username);
 			if (foundUser) {
 				setUser(foundUser);

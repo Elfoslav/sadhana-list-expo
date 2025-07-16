@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import User from '../models/User';
 import { dateReviver } from '../lib/functions';
 
+const USERNAME = 'username';
+
 class UserAsyncStore {
 
   async createUser(newUser: User) {
@@ -44,6 +46,24 @@ class UserAsyncStore {
     } catch (error) {
       console.log('saveUser error', error);
       throw error;
+    }
+  }
+
+  async saveUsername(username: string) {
+    try {
+      await AsyncStorage.setItem(USERNAME, username);
+    } catch (error) {
+      console.log('saveUsername error', error);
+      throw error;
+    }
+  }
+
+  async getUsername(): Promise<string | null> {
+    try {
+      return await AsyncStorage.getItem(USERNAME);
+    } catch (e) {
+      console.log(e)
+      throw e;
     }
   }
 }

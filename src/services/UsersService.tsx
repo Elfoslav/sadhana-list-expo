@@ -48,6 +48,24 @@ class UsersService {
 			throw error;
 		}
 	}
+
+	async saveUsername(username: string) {
+		try {
+			return await this.userStore.saveUsername(username);
+		} catch (error) {
+			console.log("saveUsername error", error);
+			throw error;
+		}
+	}
+
+	async getUsername() {
+		try {
+			return await this.userStore.getUsername();
+		} catch (error) {
+			console.log("saveUsername error", error);
+			throw error;
+		}
+	}
 }
 
 export default UsersService;
