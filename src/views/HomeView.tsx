@@ -79,7 +79,7 @@ function HomeView() {
 	}, []);
 
 	return (
-		<View style={backgroundStyle}>
+		<View style={[commonStyles.homeContainer, backgroundStyle]}>
 			<StatusBar
 				barStyle={isDarkMode ? "light-content" : "dark-content"}
 				backgroundColor={backgroundStyle.backgroundColor}

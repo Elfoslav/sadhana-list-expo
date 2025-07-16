@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
 		gap: 10,
 	},
 	homeContainer: {
-		padding: 10,
+		padding: 15,
 	},
 	textInput: {
 		borderWidth: 1,

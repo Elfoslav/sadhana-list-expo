@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { View } from "react-native";
 import * as Notifications from "expo-notifications";
 import HomeView from "../src/views/HomeView";
-import commonStyles from "../src/styles/commonStyles";
 import { SchedulableTriggerInputTypes } from "expo-notifications";
 import { registerForPushNotificationsAsync } from "../src/lib/functions";
 
@@ -34,8 +33,6 @@ export default function Home() {
 				);
 			});
 
-			console.log("alreadyScheduled", alreadyScheduled);
-
 			if (!alreadyScheduled) {
 				await Notifications.scheduleNotificationAsync({
 					content: {
@@ -53,7 +50,7 @@ export default function Home() {
 	}, []);
 
 	return (
-		<View style={commonStyles.homeContainer}>
+		<View>
 			<HomeView />
 		</View>
 	);
