@@ -1,11 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import * as Notifications from "expo-notifications";
 import HomeView from "../src/views/HomeView";
 import { SchedulableTriggerInputTypes } from "expo-notifications";
 import { registerForPushNotificationsAsync } from "../src/lib/functions";
+import SettingsService from "../src/services/SettingsService";
+import Settings from "../src/models/Settings";
 
 export default function Home() {
+	const [settings, setSettings] = useState<Settings | null>(null);
+	const settingsService = new SettingsService();
+
 	Notifications.setNotificationHandler({
 		handleNotification: async () => ({
 			shouldShowBanner: true,
@@ -18,6 +23,13 @@ export default function Home() {
 	useEffect(() => {
 		(async () => {
 			await registerForPushNotificationsAsync();
+
+			const fetchSettings = async () => {
+				const result = await settingsService.getSettings();
+				setSettings(result);
+			};
+
+			await fetchSettings();
 
 			const existing = await Notifications.getAllScheduledNotificationsAsync();
 
@@ -33,7 +45,7 @@ export default function Home() {
 				);
 			});
 
-			if (!alreadyScheduled) {
+			if (!alreadyScheduled && settings?.allowNotifications) {
 				await Notifications.scheduleNotificationAsync({
 					content: {
 						title: "Sadhana List",
