@@ -24,7 +24,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/iskcon-logo.png",
+          "icon": "./assets/iskcon-logo-96x96.png",
           "color": "#ffffff",
           "defaultChannel": "default",
           "enableBackgroundRemoteNotifications": false
