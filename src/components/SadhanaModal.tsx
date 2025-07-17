@@ -5,11 +5,13 @@ import {
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	View,
+	Text,
 } from "react-native";
 import Button from "./ui/Button";
 import SadhanaData from "../models/SadhanaData";
 import { useEffect, useState } from "react";
 import commonStyles from "../styles/commonStyles";
+import { formatDate, getAbbreviatedDayName } from "../lib/functions";
 
 interface SadhanaModalProps {
 	isVisible: boolean;
@@ -54,7 +56,7 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 						<View style={styles.modalView}>
 							{/* <Pressable style={styles.closeButton} onPress={closeModal}>
                 <Icon name="close" />
-              </Pressable> */}
+              </Pressable>
 
 							{/* <View style={styles.formField}>
                 <TextInput
@@ -66,6 +68,13 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
                 />
                 <Text>Japa rounds</Text>
               </View> */}
+
+							{sadhanaData?.date && (
+								<Text style={styles.header}>
+									{getAbbreviatedDayName(sadhanaData.date)}{" "}
+									{formatDate(sadhanaData.date)}
+								</Text>
+							)}
 
 							<View style={styles.formField}>
 								<TextInput
@@ -111,15 +120,18 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 22,
+	},
+	header: {
+		textAlign: "center",
+		marginBottom: 15,
+		fontSize: 18,
+		fontWeight: "bold",
 	},
 	modalView: {
-		margin: 10,
 		backgroundColor: "white",
 		borderRadius: 5,
 		width: 300,
 		padding: 15,
-		paddingBottom: 22,
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,

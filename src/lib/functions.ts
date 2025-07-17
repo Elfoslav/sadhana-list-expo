@@ -1,6 +1,5 @@
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
-import { SchedulableTriggerInputTypes } from "expo-notifications";
 
 export function dateReviver(key: string, value: any) {
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
@@ -8,6 +7,16 @@ export function dateReviver(key: string, value: any) {
     return new Date(value);
   }
   return value;
+}
+
+export function formatDate(date: Date) {
+  return `${date.getDate()}.${date.getMonth() + 1}.`;
+}
+
+export function getAbbreviatedDayName(date: Date): string {
+  const options: Intl.DateTimeFormatOptions = { weekday: "short" };
+  const dayName = date.toLocaleDateString("en-US", options);
+  return dayName.slice(0, 3);
 }
 
 export async function registerForPushNotificationsAsync() {

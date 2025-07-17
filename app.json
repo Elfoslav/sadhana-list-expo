@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "sadhanaList",
+    "name": "Sadhana List",
     "slug": "sadhanaList",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -36,6 +36,13 @@
       "eas": {
         "projectId": "d2473c22-2faf-4e37-801d-210ed75e900c"
       }
-    }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d2473c22-2faf-4e37-801d-210ed75e900c"
+    },
+    "ios": {}
   }
 }

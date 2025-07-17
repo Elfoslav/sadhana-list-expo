@@ -12,6 +12,7 @@ import UsersService from "../services/UsersService";
 import SadhanaData from "../models/SadhanaData";
 import User from "../models/User";
 import SadhanaManager from "../lib/SadhanaManager";
+import { formatDate, getAbbreviatedDayName } from "../lib/functions";
 import Button from "../components/ui/Button";
 import CheckBox from "../components/ui/CheckBox";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -163,10 +164,6 @@ const SadhanaListView: React.FC = () => {
 		setEditModalVisible(false);
 	};
 
-	const formatDate = (date: Date) => {
-		return `${date.getDate()}.${date.getMonth() + 1}`;
-	};
-
 	const isSameDay = (date1: Date, date2: Date) => {
 		return (
 			date1.getDate() === date2.getDate() &&
@@ -195,12 +192,6 @@ const SadhanaListView: React.FC = () => {
 		}
 
 		return shortenedText;
-	};
-
-	const getAbbreviatedDayName = (date: Date): string => {
-		const options: Intl.DateTimeFormatOptions = { weekday: "short" };
-		const dayName = date.toLocaleDateString("en-US", options);
-		return dayName.slice(0, 3);
 	};
 
 	useEffect(() => {

@@ -12,8 +12,6 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
-console.log('api key', process.env.EXPO_PUBLIC_FIREBASE_API_KEY)
-
 const app = initializeApp(firebaseConfig);
 
 // ✅ This is what you want to export and use in your service
