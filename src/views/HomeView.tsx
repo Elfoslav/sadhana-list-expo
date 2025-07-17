@@ -29,10 +29,13 @@ function HomeView() {
 	};
 
 	const onChangeUsername = (username: string) => {
-		setUsername(username.trim());
+		setUsername(username);
 	};
 
 	const goToSadhanaList = async () => {
+		// Trim username from possible trailing whitespace
+		setUsername(username.trim());
+
 		if (!username) {
 			Alert.alert(
 				"Fill in username!",

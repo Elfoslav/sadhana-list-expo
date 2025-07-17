@@ -153,6 +153,11 @@ const SadhanaListView: React.FC = () => {
 	};
 
 	const confirmEditModal = (sadhanaData: SadhanaData) => {
+		if (sadhanaData.note) {
+			// Trim note from possible trailing whitespace
+			sadhanaData.note = sadhanaData.note.trim();
+		}
+
 		const updatedSadhanaList = [...sadhanaList];
 		// Update sadhana data on given index
 		updatedSadhanaList[editingIndex] = sadhanaData;
