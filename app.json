@@ -4,14 +4,14 @@
     "slug": "sadhanaList",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/iskcon-logo-512x512.png",
+    "icon": "./assets/icon.png",
     "scheme": "sadhanalist",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "android": {
       "package": "com.sadhanalist",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/iskcon-logo-512x512.png",
+        "foregroundImage": "./assets/ic_launcher_foreground.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
@@ -43,6 +43,8 @@
     "updates": {
       "url": "https://u.expo.dev/d2473c22-2faf-4e37-801d-210ed75e900c"
     },
-    "ios": {}
+    "ios": {
+      "bundleIdentifier": "com.sadhanalist"
+    }
   }
 }

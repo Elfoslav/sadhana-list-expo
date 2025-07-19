@@ -66,15 +66,21 @@ function HomeView() {
 
 	useEffect(() => {
 		const getUser = async () => {
-			setUsername((await usersService.getUsername()) || "");
-			const foundUser = await usersService.getUser(username);
-			if (foundUser) {
-				setUser(foundUser);
-				setUsername(foundUser.username);
-				router.push({
-					pathname: "/sadhana-list",
-					params: { username: foundUser.username },
-				});
+			setIsLoading(true);
+			try {
+				const dbUsername = (await usersService.getUsername()) || "";
+				setUsername(dbUsername);
+				const foundUser = await usersService.getUser(dbUsername);
+				if (foundUser) {
+					setUser(foundUser);
+					setUsername(foundUser.username);
+					router.push({
+						pathname: "/sadhana-list",
+						params: { username: foundUser.username },
+					});
+				}
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
