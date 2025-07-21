@@ -4,14 +4,14 @@
     "slug": "sadhanaList",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/iskcon-logo-icon.png",
     "scheme": "sadhanalist",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "android": {
       "package": "com.sadhanalist",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/ic_launcher_foreground.png",
+        "foregroundImage": "./assets/iskcon-logo-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true

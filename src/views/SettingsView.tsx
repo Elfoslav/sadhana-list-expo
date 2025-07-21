@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
-import { View, Text, Switch, StyleSheet, Alert } from "react-native";
+import { View, Text, Switch, StyleSheet } from "react-native";
 import Button from "../components/ui/Button";
 import {
 	registerForPushNotificationsAsync,
@@ -9,10 +8,8 @@ import {
 import SettingsService from "../services/SettingsService";
 
 export default function SettingsView() {
-	const router = useRouter();
 	const settingsService = new SettingsService();
 	const [allowNotifications, setAllowNotifications] = useState(false);
-	const [originalValue, setOriginalValue] = useState(false); // for cancel reset
 
 	useEffect(() => {
 		const loadSettings = async () => {
@@ -20,7 +17,6 @@ export default function SettingsView() {
 				const settings = await settingsService.getSettings();
 				const value = settings?.allowNotifications ?? false;
 				setAllowNotifications(value);
-				setOriginalValue(value);
 			} catch (error) {
 				console.error("Failed to load settings:", error);
 			}
@@ -28,17 +24,11 @@ export default function SettingsView() {
 		loadSettings();
 	}, []);
 
-	const handleSubmit = () => {
+	const onValueChange = (value: boolean) => {
+		setAllowNotifications(value);
 		settingsService.saveSettings({
-			allowNotifications: allowNotifications,
+			allowNotifications: value,
 		});
-
-		Alert.alert(
-			"Settings Saved",
-			`Notifications: ${allowNotifications ? "Enabled" : "Disabled"}`
-		);
-
-		router.back();
 	};
 
 	const handleShowNotification = () => {
@@ -46,34 +36,17 @@ export default function SettingsView() {
 		showNotification("Notification", "If you see this, notifications work!");
 	};
 
-	const handleCancel = () => {
-		setAllowNotifications(originalValue);
-		router.back();
-	};
-
 	return (
 		<View style={styles.container}>
 			<View style={styles.content}>
 				<View style={styles.row}>
 					<Text style={styles.label}>Allow notifications</Text>
-					<Switch
-						value={allowNotifications}
-						onValueChange={setAllowNotifications}
-					/>
+					<Switch value={allowNotifications} onValueChange={onValueChange} />
 					<Button
 						title="Test"
 						disabled={!allowNotifications}
 						onPress={handleShowNotification}
 					/>
-				</View>
-			</View>
-
-			<View style={styles.buttonRow}>
-				<View style={styles.buttonContainer}>
-					<Button title="Submit" onPress={handleSubmit} />
-				</View>
-				<View style={styles.buttonContainer}>
-					<Button title="Cancel" variant="secondary" onPress={handleCancel} />
 				</View>
 			</View>
 		</View>
