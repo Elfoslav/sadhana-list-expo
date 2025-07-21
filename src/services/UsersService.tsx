@@ -30,7 +30,8 @@ class UsersService {
 		try {
 			const networkState = await Network.getNetworkStateAsync();
 			const isConnected =
-				networkState.isConnected && networkState.isInternetReachable;
+				networkState.isConnected === true &&
+				networkState.isInternetReachable === true;
 
 			// Load user from firebase only when connected to the internet
 			if (isConnected) {
@@ -43,7 +44,8 @@ class UsersService {
 
 			return (await this.userStore.getUser(username)) as User;
 		} catch (error) {
-			throw error;
+			console.error("Error in getUser:", error);
+			return (await this.userStore.getUser(username)) as User; // fallback
 		}
 	}
 

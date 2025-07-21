@@ -325,6 +325,12 @@ const SadhanaListView: React.FC = () => {
 					renderItem={renderItem}
 					keyExtractor={(_, index) => index.toString()}
 					initialNumToRender={20}
+					onScrollToIndexFailed={({ index, averageItemLength }) => {
+						listRef.current?.scrollToOffset({
+							offset: averageItemLength * index,
+							animated: true,
+						});
+					}}
 				/>
 
 				<View style={[styles.row, styles.footer]}>
