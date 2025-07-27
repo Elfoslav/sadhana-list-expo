@@ -31,10 +31,11 @@ export default function Home() {
 
 			await fetchSettings();
 
-			const existing = await Notifications.getAllScheduledNotificationsAsync();
+			const existingNotifications =
+				await Notifications.getAllScheduledNotificationsAsync();
 
 			// Avoid scheduling duplicates
-			const alreadyScheduled = existing.some((n) => {
+			const alreadyScheduled = existingNotifications.some((n) => {
 				const { trigger } = n;
 				if (!trigger || typeof trigger !== "object" || !("type" in trigger))
 					return false;

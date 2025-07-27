@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Switch, StyleSheet } from "react-native";
+import * as Notifications from "expo-notifications";
 import Button from "../components/ui/Button";
 import {
 	registerForPushNotificationsAsync,
@@ -24,11 +25,25 @@ export default function SettingsView() {
 		loadSettings();
 	}, []);
 
+	const disableNotifications = async () => {
+		const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+
+		for (const notification of scheduled) {
+			await Notifications.cancelScheduledNotificationAsync(
+				notification.identifier
+			);
+		}
+	};
+
 	const onValueChange = (value: boolean) => {
 		setAllowNotifications(value);
 		settingsService.saveSettings({
 			allowNotifications: value,
 		});
+
+		if (!value) {
+			disableNotifications();
+		}
 	};
 
 	const handleShowNotification = () => {
