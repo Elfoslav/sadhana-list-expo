@@ -1,6 +1,5 @@
 import {
 	Modal,
-	StyleSheet,
 	TextInput,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
@@ -11,6 +10,7 @@ import Button from "./ui/Button";
 import SadhanaData from "../models/SadhanaData";
 import { useEffect, useState } from "react";
 import commonStyles from "../styles/commonStyles";
+import modalStyles from "../styles/modalStyles";
 import { formatDate, getAbbreviatedDayName } from "../lib/functions";
 
 interface SadhanaModalProps {
@@ -47,13 +47,13 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 	return (
 		<Modal visible={isVisible} transparent={true} animationType="fade">
 			<TouchableOpacity
-				style={styles.modalBackground}
+				style={modalStyles.modalBackground}
 				activeOpacity={1}
 				onPressOut={closeModal}
 			>
-				<View style={styles.centeredView}>
+				<View style={modalStyles.centeredView}>
 					<TouchableWithoutFeedback>
-						<View style={styles.modalView}>
+						<View style={modalStyles.modalView}>
 							{/* <Pressable style={styles.closeButton} onPress={closeModal}>
                 <Icon name="close" />
               </Pressable>
@@ -70,13 +70,13 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
               </View> */}
 
 							{sadhanaData?.date && (
-								<Text style={styles.header}>
+								<Text style={modalStyles.header}>
 									{getAbbreviatedDayName(sadhanaData.date)}{" "}
 									{formatDate(sadhanaData.date)}
 								</Text>
 							)}
 
-							<View style={styles.formField}>
+							<View style={modalStyles.formField}>
 								<TextInput
 									multiline
 									numberOfLines={3}
@@ -88,15 +88,15 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 								/>
 							</View>
 
-							<View style={styles.buttonsWrapper}>
+							<View style={modalStyles.buttonsWrapper}>
 								<Button
-									style={styles.button}
+									style={modalStyles.button}
 									onPress={() => confirmModal(localSadhanaData)}
 									title="Confirm"
 								/>
 
 								<Button
-									style={[styles.button, styles.cancelButton]}
+									style={[modalStyles.button, modalStyles.cancelButton]}
 									onPress={closeModal}
 									title="Cancel"
 								/>
@@ -108,79 +108,5 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 		</Modal>
 	);
 };
-
-const styles = StyleSheet.create({
-	modalBackground: {
-		flex: 1,
-		backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the opacity here
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	header: {
-		textAlign: "center",
-		marginBottom: 15,
-		fontSize: 18,
-		fontWeight: "bold",
-	},
-	modalView: {
-		backgroundColor: "white",
-		borderRadius: 5,
-		width: 300,
-		padding: 15,
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5,
-	},
-	formField: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 10,
-		marginBottom: 10,
-	},
-	buttonsWrapper: {
-		flexDirection: "row", // Arrange children horizontally
-		justifyContent: "space-between", // Add space between buttons
-		gap: 10,
-	},
-	closeButton: {
-		position: "absolute", // Overlay the button
-		top: -20, // Adjust the top position as needed
-		right: -20, // Adjust the right position as needed
-		padding: 5, // Adjust the padding as needed
-		borderRadius: 50, // Adjust the border radius as needed
-		backgroundColor: "white",
-	},
-	closeButtonText: {
-		color: "white",
-		fontSize: 18,
-		fontWeight: "bold",
-	},
-	button: {
-		borderRadius: 5,
-		padding: 10,
-		width: 127,
-		elevation: 2,
-	},
-	buttonConfirm: {
-		backgroundColor: "#F194FF",
-	},
-	cancelButton: {
-		backgroundColor: "gray",
-	},
-	textStyle: {
-		color: "white",
-		fontWeight: "bold",
-	},
-});
 
 export default SadhanaModal;

@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Switch, StyleSheet } from "react-native";
+import { View, Text, Switch, StyleSheet, ScrollView } from "react-native";
 import * as Notifications from "expo-notifications";
 import Button from "../components/ui/Button";
 import {
+	decryptPin,
+	encryptPin,
 	registerForPushNotificationsAsync,
 	showNotification,
 } from "../lib/functions";
 import SettingsService from "../services/SettingsService";
+import PinModal from "../components/PinModal";
+import UsersService from "../services/UsersService";
+import { useUserStore } from "../stores/useUserStore";
 
 export default function SettingsView() {
+	const usersService = new UsersService();
+	const user = useUserStore((state) => state.user);
+	const updateUser = useUserStore((state) => state.updateUser);
 	const settingsService = new SettingsService();
 	const [allowNotifications, setAllowNotifications] = useState(false);
+	const [isPinModalVisible, setPinModalVisible] = useState(false);
 
 	useEffect(() => {
 		const loadSettings = async () => {
@@ -51,10 +60,27 @@ export default function SettingsView() {
 		showNotification("Notification", "If you see this, notifications work!");
 	};
 
+	const confirmPinModal = async (pin: string) => {
+		if (user) {
+			user.pin = encryptPin(pin);
+			await usersService.saveUser(user);
+			updateUser(user);
+		}
+		closePinModal();
+	};
+
+	const openPinModal = () => {
+		setPinModalVisible(true);
+	};
+
+	const closePinModal = () => {
+		setPinModalVisible(false);
+	};
+
 	return (
-		<View style={styles.container}>
+		<ScrollView style={styles.container}>
 			<View style={styles.content}>
-				<View style={styles.row}>
+				<View style={[styles.row, styles.spaceBetween]}>
 					<Text style={styles.label}>Allow notifications</Text>
 					<Switch value={allowNotifications} onValueChange={onValueChange} />
 					<Button
@@ -64,7 +90,20 @@ export default function SettingsView() {
 					/>
 				</View>
 			</View>
-		</View>
+			<View style={[styles.row, styles.spaceBetween]}>
+				<View>
+					<Text style={styles.label}>Edit your profile PIN:</Text>
+				</View>
+				<Button title="Edit" onPress={openPinModal} />
+
+				<PinModal
+					user={user}
+					isVisible={isPinModalVisible}
+					confirmModal={confirmPinModal}
+					closeModal={closePinModal}
+				/>
+			</View>
+		</ScrollView>
 	);
 }
 
@@ -75,26 +114,17 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 	},
 	content: {
-		flex: 1,
-		justifyContent: "space-between",
 		marginTop: 10,
 	},
 	row: {
 		flexDirection: "row",
 		alignItems: "center",
+		marginBottom: 10,
+	},
+	spaceBetween: {
 		justifyContent: "space-between",
-		marginBottom: 20,
 	},
 	label: {
 		fontSize: 18,
-	},
-	buttonRow: {
-		display: "flex",
-		flexDirection: "row",
-		gap: 10,
-		justifyContent: "center",
-	},
-	buttonContainer: {
-		flex: 1,
 	},
 });

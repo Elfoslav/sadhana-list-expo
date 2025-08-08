@@ -15,13 +15,14 @@ import {
 } from "react-native";
 import commonStyles from "../styles/commonStyles";
 import UsersService from "../services/UsersService";
-import User from "../models/User";
+import { useUserStore } from "../stores/useUserStore";
 
 function HomeView() {
 	const router = useRouter();
 	const usersService = new UsersService();
-	const [user, setUser] = useState<User | null>(null);
-	const [username, setUsername] = useState(user ? user.username : "");
+	const user = useUserStore((state) => state.user);
+	const setUser = useUserStore((state) => state.setUser);
+	const [username, setUsername] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const isDarkMode = useColorScheme() === "dark";
 	const backgroundStyle = {
@@ -73,7 +74,6 @@ function HomeView() {
 				const foundUser = await usersService.getUser(dbUsername);
 				if (foundUser) {
 					setUser(foundUser);
-					setUsername(foundUser.username);
 					router.push({
 						pathname: "/sadhana-list",
 						params: { username: foundUser.username },
