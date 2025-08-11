@@ -9,6 +9,7 @@ type ButtonProps = {
 	size?: "sm" | "md" | "lg";
 	style?: ViewStyle | ViewStyle[];
 	disabled?: boolean;
+	fullWidth?: boolean;
 };
 
 const Button = ({
@@ -19,11 +20,13 @@ const Button = ({
 	size = "md",
 	style,
 	disabled = false,
+	fullWidth = false,
 }: ButtonProps) => {
 	const baseStyle = [
 		styles.base,
 		variantStyles[variant],
 		sizeStyles[size],
+		fullWidth && styles.fullWidth,
 		disabled && styles.disabled,
 		style,
 	];
@@ -57,6 +60,9 @@ const styles = StyleSheet.create({
 		opacity: 0.5,
 	},
 	disabledText: {},
+	fullWidth: {
+		width: "90%",
+	},
 });
 
 const variantStyles = {

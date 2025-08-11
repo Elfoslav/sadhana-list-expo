@@ -1,6 +1,8 @@
+import { encryptPin } from "../lib/functions";
 import User from "../models/User";
 import UserAsyncStore from "../stores/UserAsyncStore";
 import UserFirestore from "../stores/UserFirestore";
+import { useUserStore } from "../stores/useUserStore";
 import * as Network from "expo-network";
 
 class UsersService {
@@ -35,18 +37,26 @@ class UsersService {
 
 			// Load user from firebase only when connected to the internet
 			if (isConnected) {
-				const user = (await this.userFirestore.getUser(username)) as User;
-				const localUser = (await this.userStore.getUser(username)) as User;
-				return user?.sadhanaData?.length > localUser?.sadhanaData?.length
-					? user
-					: localUser;
+				const user = (await this.userFirestore.getUser(
+					username
+				)) as User | null; // Set User type instead of DocumentData from Firebase
+				const localUser = await this.userStore.getUser(username);
+
+				const userSadhanaLength = user?.sadhanaData?.length ?? 0;
+				const localUserSadhanaLength = localUser?.sadhanaData?.length ?? 0;
+
+				return userSadhanaLength > localUserSadhanaLength ? user : localUser;
 			}
 
-			return (await this.userStore.getUser(username)) as User;
+			return await this.userStore.getUser(username);
 		} catch (error) {
 			console.error("Error in getUser:", error);
-			return (await this.userStore.getUser(username)) as User; // fallback
+			return await this.userStore.getUser(username); // fallback
 		}
+	}
+
+	async getLocalUser(username?: string) {
+		return await this.userStore.getUser(username);
 	}
 
 	// Method to write user data
@@ -57,6 +67,7 @@ class UsersService {
 				networkState.isConnected && networkState.isInternetReachable;
 
 			if (isConnected) {
+				console.log("savingu ser in Firebase: ", user.pin, user);
 				// Backup data in firestore DB
 				this.userFirestore.saveUser(user);
 			}
@@ -66,6 +77,17 @@ class UsersService {
 			console.log("saveUser error", error);
 			throw error;
 		}
+	}
+
+	async savePin(user: User, pin: string) {
+		if (pin.length === 4) {
+			user.pin = encryptPin(pin);
+		} else {
+			user.pin = pin; // already encrypted PIN
+		}
+
+		await this.saveUser(user);
+		useUserStore.setState({ user });
 	}
 
 	async saveUsername(username: string) {

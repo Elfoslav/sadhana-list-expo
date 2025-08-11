@@ -40,6 +40,19 @@ export default function Layout() {
 					}}
 				/>
 				<Stack.Screen
+					name="pin-auth/index"
+					options={{
+						title: "Authorization",
+						headerRight: () => null,
+					}}
+				/>
+				<Stack.Screen
+					name="pin-setup/index"
+					options={{
+						title: "PIN Setup",
+					}}
+				/>
+				<Stack.Screen
 					name="sadhana-list/index"
 					options={{
 						title: "Sadhana List",

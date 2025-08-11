@@ -51,10 +51,20 @@ class UserFirestore {
   async saveUser(user: User) {
     try {
       const userRef = doc(db, "users", user.username);
-      await setDoc(userRef, {
+      const userDoc: {
+        username: string;
+        sadhanaData: string;
+        pin?: string;
+      } = {
         username: user.username,
         sadhanaData: JSON.stringify(user.sadhanaData),
-      });
+      };
+
+      if (user.pin) {
+        userDoc.pin = user.pin;
+      }
+
+      await setDoc(userRef, userDoc);
     } catch (error) {
       throw error;
     }

@@ -5,6 +5,16 @@ const styles = StyleSheet.create({
 		flex: 1,
 		gap: 10,
 	},
+	centeredView: {
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	flexRow: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		gap: 15,
+	},
 	homeContainer: {
 		padding: 15,
 	},
@@ -48,6 +58,12 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		color: "white",
+	},
+	textBold: {
+		fontWeight: "bold",
+	},
+	fontSizeMd: {
+		fontSize: 16,
 	},
 });
 

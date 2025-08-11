@@ -3,20 +3,16 @@ import { View, Text, Switch, StyleSheet, ScrollView } from "react-native";
 import * as Notifications from "expo-notifications";
 import Button from "../components/ui/Button";
 import {
-	decryptPin,
-	encryptPin,
 	registerForPushNotificationsAsync,
 	showNotification,
 } from "../lib/functions";
 import SettingsService from "../services/SettingsService";
 import PinModal from "../components/PinModal";
-import UsersService from "../services/UsersService";
+import { usersService } from "../services/usersServiceInstance";
 import { useUserStore } from "../stores/useUserStore";
 
 export default function SettingsView() {
-	const usersService = new UsersService();
 	const user = useUserStore((state) => state.user);
-	const updateUser = useUserStore((state) => state.updateUser);
 	const settingsService = new SettingsService();
 	const [allowNotifications, setAllowNotifications] = useState(false);
 	const [isPinModalVisible, setPinModalVisible] = useState(false);
@@ -62,9 +58,7 @@ export default function SettingsView() {
 
 	const confirmPinModal = async (pin: string) => {
 		if (user) {
-			user.pin = encryptPin(pin);
-			await usersService.saveUser(user);
-			updateUser(user);
+			usersService.savePin(user, pin);
 		}
 		closePinModal();
 	};

@@ -14,12 +14,11 @@ import {
 	Alert,
 } from "react-native";
 import commonStyles from "../styles/commonStyles";
-import UsersService from "../services/UsersService";
+import { usersService } from "../services/usersServiceInstance";
 import { useUserStore } from "../stores/useUserStore";
 
 function HomeView() {
 	const router = useRouter();
-	const usersService = new UsersService();
 	const user = useUserStore((state) => state.user);
 	const setUser = useUserStore((state) => state.setUser);
 	const [username, setUsername] = useState("");
@@ -33,10 +32,48 @@ function HomeView() {
 		setUsername(username);
 	};
 
-	const goToSadhanaList = async () => {
-		// Trim username from possible trailing whitespace
-		setUsername(username.trim());
+	const checkUserData = async () => {
+		setIsLoading(true);
+		const localUser = await usersService.getLocalUser(username);
+		localUser && setUser(localUser);
+		await usersService.saveUsername(username);
+		const existingUser = await getUser(username);
+		// Rewrite localUser
+		existingUser && setUser(existingUser);
 
+		if (!existingUser) {
+			// create user
+			const newUser = await usersService.createUser({
+				username,
+				sadhanaData: [],
+			});
+
+			newUser && setUser(newUser);
+		}
+
+		if (!localUser?.pin && existingUser?.pin) {
+			await usersService.saveUsername(username);
+			router.push({
+				pathname: "/pin-auth",
+				params: { username },
+			});
+			return;
+		}
+
+		if (!localUser?.pin && !existingUser?.pin) {
+			await usersService.saveUsername(username);
+			router.push({
+				pathname: "/pin-setup",
+				params: { username },
+			});
+			return;
+		}
+
+		setIsLoading(false);
+		return true;
+	};
+
+	const goToSadhanaList = async () => {
 		if (!username) {
 			Alert.alert(
 				"Fill in username!",
@@ -45,46 +82,30 @@ function HomeView() {
 			return;
 		}
 
-		setIsLoading(true);
-		await usersService.saveUsername(username);
-		// create user
-		await usersService.createUser({
-			username,
-			sadhanaData: [],
-		});
+		const checkOk = await checkUserData();
 
-		setIsLoading(false);
-
-		router.push({
-			pathname: "/sadhana-list",
-			params: { username },
-		});
+		if (checkOk) {
+			router.push({
+				pathname: "/sadhana-list",
+				params: { username },
+			});
+		}
 	};
 
 	const getSadhanaButtonText = () => {
 		return isLoading && !user ? "Configuring..." : "Show Sadhana List";
 	};
 
-	useEffect(() => {
-		const getUser = async () => {
-			setIsLoading(true);
-			try {
-				const dbUsername = (await usersService.getUsername()) || "";
-				setUsername(dbUsername);
-				const foundUser = await usersService.getUser(dbUsername);
-				if (foundUser) {
-					setUser(foundUser);
-					router.push({
-						pathname: "/sadhana-list",
-						params: { username: foundUser.username },
-					});
-				}
-			} finally {
-				setIsLoading(false);
-			}
-		};
+	const getUser = async (username: string) => {
+		// Trim username from possible trailing whitespace
+		const trimmedUsername = username.trim();
+		setUsername(trimmedUsername);
+		const foundUser = await usersService.getUser(trimmedUsername);
+		return foundUser;
+	};
 
-		getUser();
+	useEffect(() => {
+		checkUserData();
 	}, []);
 
 	return (

@@ -39,7 +39,7 @@ const PinModal: React.FC<PinModalProps> = ({
 
 	const handleConfirm = () => {
 		if (pin.length !== 4) {
-			Alert.alert("Neplatný PIN", "Zadejte čtyřmístný PIN.");
+			Alert.alert("Invalid PIN", "Enter 4-digit PIN.");
 			return;
 		}
 
