@@ -1,12 +1,12 @@
 import { View, Text, Alert } from "react-native";
-import commonStyles from "@/src/styles/commonStyles";
-import PinInput from "@/src/components/PinInput";
+import commonStyles from "../../src/styles/commonStyles";
+import PinInput from "../../src/components/PinInput";
 import { useState } from "react";
-import Button from "@/src/components/ui/Button";
+import Button from "../../src/components/ui/Button";
 import { router } from "expo-router";
-import { usersService } from "@/src/services/usersServiceInstance";
-import { useUserStore } from "@/src/stores/useUserStore";
-import { decryptPin, encryptPin } from "@/src/lib/functions";
+import { usersService } from "../../src/services/usersServiceInstance";
+import { useUserStore } from "../../src/stores/useUserStore";
+import { decryptPin } from "../../src/lib/functions";
 
 export default function PinSetup() {
 	const user = useUserStore((state) => state.user);
