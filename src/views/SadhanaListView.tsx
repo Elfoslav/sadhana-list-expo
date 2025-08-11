@@ -261,6 +261,7 @@ const SadhanaListView: React.FC = () => {
 						style={commonStyles.numericInput}
 						keyboardType="numeric"
 						placeholder="0"
+						maxLength={2}
 						value={sadhana.japaRounds ? sadhana.japaRounds.toString() : ""}
 						onChangeText={(value) => handleJapaRoundsChange(index, value)}
 					/>
