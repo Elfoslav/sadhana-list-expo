@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Switch, StyleSheet, ScrollView } from "react-native";
+import Toast from "react-native-toast-message";
 import * as Notifications from "expo-notifications";
 import Button from "../components/ui/Button";
 import {
@@ -60,6 +61,13 @@ export default function SettingsView() {
 		if (user) {
 			usersService.savePin(user, pin);
 		}
+
+		Toast.show({
+			type: "success",
+			text1: "PIN changed successfully",
+			position: "bottom",
+		});
+
 		closePinModal();
 	};
 
@@ -84,19 +92,21 @@ export default function SettingsView() {
 					/>
 				</View>
 			</View>
-			<View style={[styles.row, styles.spaceBetween]}>
-				<View>
-					<Text style={styles.label}>Edit your profile PIN:</Text>
-				</View>
-				<Button title="Edit" onPress={openPinModal} />
+			{user && (
+				<View style={[styles.row, styles.spaceBetween]}>
+					<View>
+						<Text style={styles.label}>Edit your profile PIN:</Text>
+					</View>
+					<Button title="Edit" onPress={openPinModal} />
 
-				<PinModal
-					user={user}
-					isVisible={isPinModalVisible}
-					confirmModal={confirmPinModal}
-					closeModal={closePinModal}
-				/>
-			</View>
+					<PinModal
+						user={user}
+						isVisible={isPinModalVisible}
+						confirmModal={confirmPinModal}
+						closeModal={closePinModal}
+					/>
+				</View>
+			)}
 		</ScrollView>
 	);
 }
