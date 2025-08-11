@@ -33,44 +33,51 @@ function HomeView() {
 	};
 
 	const checkUserData = async () => {
-		setIsLoading(true);
-		const localUser = await usersService.getLocalUser(username);
-		localUser && setUser(localUser);
-		await usersService.saveUsername(username);
-		const existingUser = await getUser(username);
-		// Rewrite localUser
-		existingUser && setUser(existingUser);
-
-		if (!existingUser) {
-			// create user
-			const newUser = await usersService.createUser({
-				username,
-				sadhanaData: [],
-			});
-
-			newUser && setUser(newUser);
-		}
-
-		if (!localUser?.pin && existingUser?.pin) {
+		if (username) {
+			setIsLoading(true);
+			const localUser = await usersService.getLocalUser(username);
+			localUser && setUser(localUser);
 			await usersService.saveUsername(username);
-			router.push({
-				pathname: "/pin-auth",
-				params: { username },
-			});
-			return;
+			const existingUser = await getUser(username);
+			// Rewrite localUser
+			existingUser && setUser(existingUser);
+
+			if (!existingUser) {
+				// create user
+				const newUser = await usersService.createUser({
+					username,
+					sadhanaData: [],
+				});
+
+				newUser && setUser(newUser);
+			}
+
+			if (
+				(!localUser?.pin && existingUser?.pin) ||
+				localUser?.pin !== existingUser?.pin
+			) {
+				await usersService.saveUsername(username);
+				router.push({
+					pathname: "/pin-auth",
+					params: { username },
+				});
+				return;
+			}
+
+			if (!localUser?.pin && !existingUser?.pin) {
+				await usersService.saveUsername(username);
+				router.push({
+					pathname: "/pin-setup",
+					params: { username },
+				});
+				return;
+			}
+
+			setIsLoading(false);
+			return true;
 		}
 
-		if (!localUser?.pin && !existingUser?.pin) {
-			await usersService.saveUsername(username);
-			router.push({
-				pathname: "/pin-setup",
-				params: { username },
-			});
-			return;
-		}
-
-		setIsLoading(false);
-		return true;
+		return false;
 	};
 
 	const goToSadhanaList = async () => {
