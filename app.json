@@ -10,6 +10,7 @@
     "newArchEnabled": true,
     "android": {
       "package": "com.sadhanalist",
+      "versionCode": 13,
       "adaptiveIcon": {
         "foregroundImage": "./assets/iskcon-logo-padding-120.png",
         "backgroundColor": "#ffffff"
