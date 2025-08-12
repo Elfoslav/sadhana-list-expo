@@ -232,7 +232,7 @@ const SadhanaListView: React.FC = () => {
 		const isToday = isSameDay(sadhana.date, new Date());
 
 		return (
-			<View key={index} style={[styles.row, isToday ? styles.activeRow : null]}>
+			<View style={[styles.row, isToday ? styles.activeRow : null]}>
 				<View style={styles.flexRow}>
 					<Text style={styles.dayText}>
 						{getAbbreviatedDayName(sadhana.date)}
@@ -324,8 +324,11 @@ const SadhanaListView: React.FC = () => {
 					ref={listRef}
 					data={sadhanaList}
 					renderItem={renderItem}
-					keyExtractor={(_, index) => index.toString()}
-					initialNumToRender={20}
+					keyExtractor={(item) => item.date.toString()}
+					initialNumToRender={sadhanaList.length}
+					removeClippedSubviews={false}
+					keyboardShouldPersistTaps="handled"
+					keyboardDismissMode="on-drag"
 					onScrollToIndexFailed={({ index, averageItemLength }) => {
 						listRef.current?.scrollToOffset({
 							offset: averageItemLength * index,
