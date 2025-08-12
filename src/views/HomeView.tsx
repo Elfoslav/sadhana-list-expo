@@ -111,8 +111,19 @@ function HomeView() {
 		return foundUser;
 	};
 
+	const setupUsername = async () => {
+		const foundUsername = await usersService.getUsername();
+		foundUsername && setUsername(foundUsername);
+	};
+
+	const onShow = async () => {
+		setupUsername();
+		const checkOk = await checkUserData();
+		checkOk && goToSadhanaList();
+	};
+
 	useEffect(() => {
-		checkUserData();
+		onShow();
 	}, []);
 
 	return (
