@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
+const FOCUSED_COLOR = "#007bff";
+const TEXT_COLOR = "#888";
 const TABS = [
 	{ label: "My Sadhana", icon: "person" },
 	{ label: "Other Users", icon: "group" },
@@ -63,10 +65,13 @@ export default function CustomTabs({
 						<MaterialIcons
 							name={tab.icon as any}
 							size={24}
-							color={isFocused ? "#007bff" : "#888"}
+							color={isFocused ? FOCUSED_COLOR : TEXT_COLOR}
 						/>
 						<Text
-							style={[styles.label, { color: isFocused ? "#007bff" : "#888" }]}
+							style={[
+								styles.label,
+								{ color: isFocused ? FOCUSED_COLOR : TEXT_COLOR },
+							]}
 						>
 							{tab.label}
 						</Text>
