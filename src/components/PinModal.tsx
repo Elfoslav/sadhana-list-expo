@@ -15,6 +15,8 @@ import PinInput from "./PinInput";
 import User from "../models/User";
 import { decryptPin } from "../lib/functions";
 
+const BUTTON_WIDTH = 127;
+
 interface PinModalProps {
 	isVisible: boolean;
 	user: User | null;
@@ -62,12 +64,16 @@ const PinModal: React.FC<PinModalProps> = ({
 
 							<View style={modalStyles.buttonsWrapper}>
 								<Button
-									style={modalStyles.button}
+									style={[modalStyles.button, { width: BUTTON_WIDTH }]}
 									onPress={handleConfirm}
 									title="Confirm"
 								/>
 								<Button
-									style={[modalStyles.button, modalStyles.cancelButton]}
+									style={[
+										modalStyles.button,
+										modalStyles.cancelButton,
+										{ width: BUTTON_WIDTH },
+									]}
 									onPress={closeModal}
 									title="Cancel"
 								/>

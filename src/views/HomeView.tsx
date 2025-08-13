@@ -65,6 +65,7 @@ function HomeView() {
 					pathname: "/pin-auth",
 					params: { username },
 				});
+				setIsLoading(false);
 				return;
 			}
 
@@ -74,6 +75,7 @@ function HomeView() {
 					pathname: "/pin-setup",
 					params: { username },
 				});
+				setIsLoading(false);
 				return;
 			}
 
