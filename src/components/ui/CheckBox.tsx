@@ -16,6 +16,7 @@ type CheckBoxProps = {
 	label?: string;
 	containerStyle?: ViewStyle;
 	labelStyle?: TextStyle;
+	editable?: boolean;
 };
 
 const CheckBox: React.FC<CheckBoxProps> = ({
@@ -24,6 +25,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 	label = "",
 	containerStyle,
 	labelStyle,
+	editable = true,
 }) => {
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -49,7 +51,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 		<Pressable
 			onPressIn={handlePressIn}
 			onPressOut={handlePressOut}
-			onPress={() => onChange(!value)}
+			onPress={() => editable && onChange(!value)}
 		>
 			<Animated.View
 				style={[
@@ -58,7 +60,12 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 					{ transform: [{ scale: scaleAnim }] },
 				]}
 			>
-				<View style={[styles.checkbox, value && styles.checkedBox]}>
+				<View
+					style={[
+						styles.checkbox,
+						value && (editable ? styles.checkedBox : styles.checkedBoxDisabled),
+					]}
+				>
 					{value && <Ionicons name="checkmark" size={16} color="#fff" />}
 				</View>
 				<Text style={[styles.label, labelStyle]}>{label}</Text>
@@ -88,6 +95,10 @@ const styles = StyleSheet.create({
 	checkedBox: {
 		borderColor: "#4CAF50",
 		backgroundColor: "#4CAF50",
+	},
+	checkedBoxDisabled: {
+		borderColor: "#888",
+		backgroundColor: "#AAA",
 	},
 	label: {
 		fontSize: 16,

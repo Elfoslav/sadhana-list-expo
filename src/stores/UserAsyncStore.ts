@@ -31,7 +31,7 @@ class UserAsyncStore {
         return JSON.parse(user, dateReviver);
       }
 
-      console.log('user not found');
+      console.log(`user ${username} not found`);
       return null;
     } catch (e) {
       console.log(e)

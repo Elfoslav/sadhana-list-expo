@@ -1,9 +1,13 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-	container: {
+	flexContainer: {
 		flex: 1,
 		gap: 10,
+		padding: 20,
+	},
+	container: {
+		padding: 20,
 	},
 	centeredView: {
 		justifyContent: "center",
@@ -15,15 +19,12 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		gap: 15,
 	},
-	homeContainer: {
-		padding: 15,
-	},
 	textInput: {
+		borderColor: "#aaa",
 		borderWidth: 1,
-		borderColor: "gray",
-		borderRadius: 5,
-		padding: 5,
-		height: 28,
+		padding: 10,
+		borderRadius: 4,
+		backgroundColor: "#fff",
 	},
 	numericInput: {
 		width: 30,

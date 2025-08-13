@@ -15,14 +15,18 @@ import { formatDate, getAbbreviatedDayName } from "../lib/functions";
 
 interface SadhanaModalProps {
 	isVisible: boolean;
+	readOnly?: boolean;
 	sadhanaData: SadhanaData;
 	confirmModal: (sadhanaData: SadhanaData) => void;
 	closeModal: () => void;
 }
 
+const BUTTON_WIDTH = 127;
+
 const SadhanaModal: React.FC<SadhanaModalProps> = ({
 	isVisible,
 	sadhanaData,
+	readOnly,
 	confirmModal,
 	closeModal,
 }) => {
@@ -85,20 +89,27 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 									value={localSadhanaData?.note || ""}
 									placeholder="Note..."
 									onChangeText={(value) => handleChange(value, "note")}
+									editable={!readOnly}
 								/>
 							</View>
 
 							<View style={modalStyles.buttonsWrapper}>
-								<Button
-									style={modalStyles.button}
-									onPress={() => confirmModal(localSadhanaData)}
-									title="Confirm"
-								/>
+								{!readOnly && (
+									<Button
+										style={[modalStyles.button, { width: BUTTON_WIDTH }]}
+										onPress={() => confirmModal(localSadhanaData)}
+										title="Confirm"
+									/>
+								)}
 
 								<Button
-									style={[modalStyles.button, modalStyles.cancelButton]}
+									style={[
+										modalStyles.button,
+										modalStyles.cancelButton,
+										{ width: readOnly ? "100%" : BUTTON_WIDTH },
+									]}
 									onPress={closeModal}
-									title="Cancel"
+									title={readOnly ? "Close" : "Cancel"}
 								/>
 							</View>
 						</View>

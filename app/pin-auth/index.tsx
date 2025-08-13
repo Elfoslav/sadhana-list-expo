@@ -34,7 +34,7 @@ export default function PinSetup() {
 	};
 
 	return (
-		<View style={[commonStyles.container, commonStyles.centeredView]}>
+		<View style={[commonStyles.flexContainer, commonStyles.centeredView]}>
 			<Text style={commonStyles.fontSizeMd}>
 				The "<Text style={commonStyles.textBold}>{user?.username}"</Text>{" "}
 				account is protected
@@ -50,13 +50,15 @@ export default function PinSetup() {
 			</Text>
 			<PinInput value={pin} onChange={setPin} />
 
-			<Button
-				onPress={checkPin}
-				title="Submit"
-				size="lg"
-				style={{ marginBottom: 10 }}
-				fullWidth
-			/>
+			<View style={{ alignItems: "center", width: "100%" }}>
+				<Button
+					onPress={checkPin}
+					title="Submit"
+					size="lg"
+					style={{ marginBottom: 10 }}
+					fullWidth
+				/>
+			</View>
 		</View>
 	);
 }

@@ -5,21 +5,20 @@ import {
 	View,
 	StyleSheet,
 	StatusBar,
-	ScrollView,
 	useColorScheme,
 	Image,
 	TextInput,
-	TouchableOpacity,
-	Text,
 	Alert,
 } from "react-native";
 import commonStyles from "../styles/commonStyles";
+import SettingsService from "../services/SettingsService";
 import { usersService } from "../services/usersServiceInstance";
 import { useUserStore } from "../stores/useUserStore";
+import Button from "../components/ui/Button";
 
 function HomeView() {
 	const router = useRouter();
-	const user = useUserStore((state) => state.user);
+	const settingsService = new SettingsService();
 	const setUser = useUserStore((state) => state.setUser);
 	const [username, setUsername] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +49,11 @@ function HomeView() {
 				});
 
 				newUser && setUser(newUser);
+
+				// Create default settings
+				settingsService.createSettings({
+					allowNotifications: true, // default notifications - true
+				});
 			}
 
 			if (
@@ -100,7 +104,7 @@ function HomeView() {
 	};
 
 	const getSadhanaButtonText = () => {
-		return isLoading && !user ? "Configuring..." : "Show Sadhana List";
+		return isLoading ? "Configuring..." : "Show Sadhana List";
 	};
 
 	const getUser = async (username: string) => {
@@ -127,39 +131,32 @@ function HomeView() {
 	}, []);
 
 	return (
-		<View style={[commonStyles.homeContainer, backgroundStyle]}>
+		<View style={[commonStyles.container, backgroundStyle]}>
 			<StatusBar
 				barStyle={isDarkMode ? "light-content" : "dark-content"}
 				backgroundColor={backgroundStyle.backgroundColor}
 			/>
-			<ScrollView
-				contentInsetAdjustmentBehavior="automatic"
-				style={backgroundStyle}
-			>
-				<View style={commonStyles.container}>
-					<Image
-						style={styles.logo}
-						source={require("../../assets/iskcon-logo.png")}
-					/>
-					<TextInput
-						style={commonStyles.textInput}
-						value={username}
-						placeholder="Your name"
-						autoCorrect={false}
-						onChangeText={onChangeUsername}
-					/>
+			<View>
+				<Image
+					style={styles.logo}
+					source={require("../../assets/iskcon-logo.png")}
+				/>
+				<TextInput
+					style={[commonStyles.textInput, { marginTop: 10 }]}
+					value={username}
+					placeholder="Your name"
+					autoCorrect={false}
+					onChangeText={onChangeUsername}
+				/>
 
-					<TouchableOpacity
-						activeOpacity={0.85}
-						style={commonStyles.touchableBtnLg}
-						onPress={goToSadhanaList}
-					>
-						<Text style={commonStyles.touchableBtnText}>
-							{getSadhanaButtonText()}
-						</Text>
-					</TouchableOpacity>
-				</View>
-			</ScrollView>
+				<Button
+					fullWidth
+					onPress={goToSadhanaList}
+					title={getSadhanaButtonText()}
+					size="lg"
+					style={{ marginTop: 15 }}
+				/>
+			</View>
 		</View>
 	);
 }

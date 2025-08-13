@@ -55,6 +55,20 @@ class UsersService {
 		}
 	}
 
+	async getRemoteUser(username?: string) {
+		try {
+			return (await this.userFirestore.getUser(username)) as User | null;
+		} catch (error) {
+			console.error("Error in getUser:", error);
+			return await this.userStore.getUser(username); // fallback
+		}
+	}
+
+	async getUsers(username?: string) {
+		const docs = await this.userFirestore.getUsers(username);
+		return docs as User[];
+	}
+
 	async getLocalUser(username?: string) {
 		return await this.userStore.getUser(username);
 	}

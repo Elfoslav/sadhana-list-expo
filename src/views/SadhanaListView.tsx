@@ -1,5 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import React, {
+	useEffect,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import {
 	View,
 	Text,
@@ -20,7 +26,18 @@ import SadhanaModal from "../components/SadhanaModal";
 import commonStyles from "../styles/commonStyles";
 
 const SadhanaListView: React.FC = () => {
-	const { username } = useLocalSearchParams() as { username: string };
+	const { username, readOnly } = useLocalSearchParams() as {
+		username: string;
+		readOnly: string;
+	};
+
+	const navigation = useNavigation();
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			title: `Sadhana List ${username}`,
+		});
+	}, [navigation]);
 
 	if (!username) {
 		return <Text>No username provided</Text>;
@@ -71,7 +88,13 @@ const SadhanaListView: React.FC = () => {
 			currentMonth + 1,
 			0
 		).getDate();
-		const foundUser = (await usersService.getUser(username)) as User;
+
+		let foundUser;
+		if (readOnly) {
+			foundUser = (await usersService.getRemoteUser(username)) as User;
+		} else {
+			foundUser = (await usersService.getUser(username)) as User;
+		}
 
 		return Array.from({ length: numberOfDaysInMonth }, (_, i) => i + 1).map(
 			(day) => {
@@ -212,7 +235,13 @@ const SadhanaListView: React.FC = () => {
 
 	useEffect(() => {
 		const getUser = async () => {
-			const foundUser = await usersService.getUser(username);
+			let foundUser;
+			if (readOnly) {
+				foundUser = await usersService.getRemoteUser(username);
+			} else {
+				foundUser = await usersService.getUser(username);
+			}
+
 			if (foundUser) {
 				setUser(foundUser);
 			}
@@ -242,18 +271,21 @@ const SadhanaListView: React.FC = () => {
 					<View style={styles.mangalaCheckboxContainer}>
 						<CheckBox
 							value={sadhana.mangala}
+							editable={!readOnly}
 							onChange={() => handleCheckboxChange(index, "mangala")}
 						/>
 					</View>
 					<View style={styles.guruPujaCheckboxContainer}>
 						<CheckBox
 							value={sadhana.guruPuja}
+							editable={!readOnly}
 							onChange={() => handleCheckboxChange(index, "guruPuja")}
 						/>
 					</View>
 					<View style={styles.gauraAratiCheckboxContainer}>
 						<CheckBox
 							value={sadhana.gauraArati}
+							editable={!readOnly}
 							onChange={() => handleCheckboxChange(index, "gauraArati")}
 						/>
 					</View>
@@ -264,6 +296,7 @@ const SadhanaListView: React.FC = () => {
 						maxLength={2}
 						value={sadhana.japaRounds ? sadhana.japaRounds.toString() : ""}
 						onChangeText={(value) => handleJapaRoundsChange(index, value)}
+						editable={!readOnly}
 					/>
 					<Button
 						variant="clear"
@@ -366,6 +399,7 @@ const SadhanaListView: React.FC = () => {
 
 			<SadhanaModal
 				isVisible={isEditModalVisible}
+				readOnly={readOnly === "true"}
 				sadhanaData={sadhanaList[editingIndex]}
 				confirmModal={confirmEditModal}
 				closeModal={closeEditModal}

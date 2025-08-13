@@ -69,7 +69,6 @@ const modalStyles = StyleSheet.create({
 	button: {
 		borderRadius: 5,
 		padding: 10,
-		width: 127,
 		elevation: 2,
 	},
 	buttonConfirm: {

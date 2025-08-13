@@ -33,6 +33,7 @@ const Button = ({
 	const textStyle = [
 		styles.text,
 		textVariantStyles[variant],
+		sizeTextStyles[size],
 		disabled && styles.disabledText,
 	];
 	return (
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
 	},
 	disabledText: {},
 	fullWidth: {
-		width: "90%",
+		width: "100%",
 	},
 });
 
@@ -95,10 +96,16 @@ const textVariantStyles = {
 	},
 };
 
-const sizeStyles = {
+const sizeStyles = StyleSheet.create({
 	sm: { paddingVertical: 6, paddingHorizontal: 12 },
 	md: { paddingVertical: 10, paddingHorizontal: 16 },
 	lg: { paddingVertical: 14, paddingHorizontal: 20 },
-};
+});
+
+const sizeTextStyles = StyleSheet.create({
+	sm: {},
+	md: {},
+	lg: { fontSize: 16 },
+});
 
 export default Button;

@@ -24,7 +24,7 @@ export default function PinSetup() {
 	};
 
 	return (
-		<View style={[commonStyles.container, commonStyles.centeredView]}>
+		<View style={[commonStyles.flexContainer, commonStyles.centeredView]}>
 			<Text style={commonStyles.fontSizeMd}>
 				To protect your{" "}
 				<Text style={commonStyles.textBold}>{user?.username}</Text> account
@@ -44,26 +44,28 @@ export default function PinSetup() {
 				If you forget your PIN, you will lose your account
 			</Text>
 
-			<Button
-				onPress={savePin}
-				title="Submit"
-				size="lg"
-				style={{ marginBottom: 10 }}
-				fullWidth
-			/>
+			<View style={{ alignItems: "center", width: "100%" }}>
+				<Button
+					onPress={savePin}
+					title="Submit"
+					size="lg"
+					style={{ marginBottom: 10 }}
+					fullWidth
+				/>
 
-			<Button
-				onPress={() => {
-					router.replace({
-						pathname: "/sadhana-list",
-						params: { username: user?.username },
-					});
-				}}
-				title="Skip"
-				variant="secondary"
-				size="lg"
-				fullWidth
-			/>
+				<Button
+					onPress={() => {
+						router.replace({
+							pathname: "/sadhana-list",
+							params: { username: user?.username },
+						});
+					}}
+					title="Skip"
+					variant="secondary"
+					size="lg"
+					fullWidth
+				/>
+			</View>
 		</View>
 	);
 }

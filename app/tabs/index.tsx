@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import * as Notifications from "expo-notifications";
-import HomeView from "../src/views/HomeView";
+import HomeView from "../../src/views/HomeView";
 import { SchedulableTriggerInputTypes } from "expo-notifications";
-import { registerForPushNotificationsAsync } from "../src/lib/functions";
-import SettingsService from "../src/services/SettingsService";
-import Settings from "../src/models/Settings";
+import { registerForPushNotificationsAsync } from "../../src/lib/functions";
+import SettingsService from "../../src/services/SettingsService";
+import Settings from "../../src/models/Settings";
 
 export default function Home() {
 	const [settings, setSettings] = useState<Settings | null>(null);
