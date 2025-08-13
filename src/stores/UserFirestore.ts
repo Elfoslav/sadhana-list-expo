@@ -10,7 +10,8 @@ import {
   orderBy,
   limit as limitFn,
   startAt,
-  endAt
+  endAt,
+  Timestamp
 } from "firebase/firestore";
 import User from "../models/User";
 import { dateReviver } from "../lib/functions";
@@ -98,9 +99,11 @@ class UserFirestore {
         username: string;
         sadhanaData: string;
         pin?: string;
+        updatedAt?: Timestamp;
       } = {
         username: user.username,
         sadhanaData: JSON.stringify(user.sadhanaData),
+        updatedAt: Timestamp.fromDate(new Date()),
       };
 
       if (user.pin) {
