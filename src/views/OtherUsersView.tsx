@@ -8,6 +8,7 @@ import {
 	useColorScheme,
 	Image,
 	Alert,
+	Text,
 } from "react-native";
 import commonStyles from "../styles/commonStyles";
 import { usersService } from "../services/usersServiceInstance";
@@ -78,6 +79,7 @@ function OtherUsersView() {
 				backgroundColor={backgroundStyle.backgroundColor}
 			/>
 			<View>
+				<Text style={commonStyles.heading}>Sadhana of others</Text>
 				<Image
 					style={styles.logo}
 					source={require("../../assets/iskcon-logo.png")}

@@ -9,6 +9,7 @@ import {
 	Image,
 	TextInput,
 	Alert,
+	Text,
 } from "react-native";
 import commonStyles from "../styles/commonStyles";
 import SettingsService from "../services/SettingsService";
@@ -139,6 +140,7 @@ function HomeView() {
 				backgroundColor={backgroundStyle.backgroundColor}
 			/>
 			<View>
+				<Text style={commonStyles.heading}>My Sadhana</Text>
 				<Image
 					style={styles.logo}
 					source={require("../../assets/iskcon-logo.png")}

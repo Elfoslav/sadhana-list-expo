@@ -66,6 +66,15 @@ const styles = StyleSheet.create({
 	fontSizeMd: {
 		fontSize: 16,
 	},
+	heading: {
+		fontFamily: "Roboto",
+		color: "#555",
+		fontSize: 24,
+		fontWeight: "bold",
+		textAlign: "center",
+		marginTop: 10,
+		marginBottom: 5,
+	},
 });
 
 export default styles;

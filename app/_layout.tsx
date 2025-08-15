@@ -19,6 +19,7 @@ export default function Layout() {
 			edges={["top", "bottom"]}
 		>
 			<Stack
+				initialRouteName="(tabs)"
 				screenOptions={{
 					headerStyle: {
 						backgroundColor: "#fff",
@@ -34,7 +35,7 @@ export default function Layout() {
 					),
 				}}
 			>
-				<Stack.Screen name="tabs" options={{ headerShown: false }} />
+				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 				<Stack.Screen
 					name="index"
 					options={{
