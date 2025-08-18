@@ -28,11 +28,7 @@ function HomeView() {
 		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
 	};
 
-	const onChangeUsername = (username: string) => {
-		setUsername(username);
-	};
-
-	const checkUserData = async () => {
+	const checkUserData = async (username: string) => {
 		if (username) {
 			setIsLoading(true);
 			const localUser = await usersService.getLocalUser(username);
@@ -87,7 +83,7 @@ function HomeView() {
 		return false;
 	};
 
-	const goToSadhanaList = async () => {
+	const goToSadhanaList = async (username: string) => {
 		if (!username) {
 			Alert.alert(
 				"Fill in username!",
@@ -96,7 +92,7 @@ function HomeView() {
 			return;
 		}
 
-		const checkOk = await checkUserData();
+		const checkOk = await checkUserData(username);
 
 		if (checkOk) {
 			router.push({
@@ -121,12 +117,13 @@ function HomeView() {
 	const setupUsername = async () => {
 		const foundUsername = await usersService.getUsername();
 		foundUsername && setUsername(foundUsername);
+		return foundUsername;
 	};
 
 	const onShow = async () => {
-		setupUsername();
-		const checkOk = await checkUserData();
-		checkOk && goToSadhanaList();
+		const foundUsername = await setupUsername();
+		const checkOk = await checkUserData(foundUsername || "");
+		checkOk && goToSadhanaList(foundUsername || "");
 	};
 
 	useEffect(() => {
@@ -150,12 +147,12 @@ function HomeView() {
 					value={username}
 					placeholder="Your name"
 					autoCorrect={false}
-					onChangeText={onChangeUsername}
+					onChangeText={setUsername}
 				/>
 
 				<Button
 					fullWidth
-					onPress={goToSadhanaList}
+					onPress={() => goToSadhanaList(username)}
 					title={getSadhanaButtonText()}
 					size="lg"
 					style={{ marginTop: 15 }}
