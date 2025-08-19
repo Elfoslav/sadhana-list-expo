@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import { useAppState } from "../stores/useAppState";
 import {
 	View,
 	StyleSheet,
@@ -24,13 +25,14 @@ function HomeView() {
 	const [username, setUsername] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const isDarkMode = useColorScheme() === "dark";
+	const { redirectedToSadhana, setRedirectedToSadhana } = useAppState();
 	const backgroundStyle = {
 		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
 	};
 
 	const checkUserData = async (username: string) => {
 		if (username) {
-			setIsLoading(true);
+			!redirectedToSadhana && setIsLoading(true);
 			const localUser = await usersService.getLocalUser(username);
 			localUser && setUser(localUser);
 			await usersService.saveUsername(username);
@@ -123,7 +125,10 @@ function HomeView() {
 	const onShow = async () => {
 		const foundUsername = await setupUsername();
 		const checkOk = await checkUserData(foundUsername || "");
-		checkOk && goToSadhanaList(foundUsername || "");
+		if (checkOk && !redirectedToSadhana) {
+			setRedirectedToSadhana(true);
+			goToSadhanaList(foundUsername || "");
+		}
 	};
 
 	useEffect(() => {

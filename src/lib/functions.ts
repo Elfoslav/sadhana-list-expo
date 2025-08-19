@@ -1,5 +1,7 @@
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
+import { SchedulableTriggerInputTypes } from "expo-notifications";
+import SettingsService from "../../src/services/SettingsService";
 import CryptoES from "crypto-es";
 
 // Secret key - must be kept private
@@ -68,4 +70,64 @@ export async function showNotification(title: string, body: string) {
   } catch (error) {
     console.error("Notification error:", error);
   }
+}
+
+export async function scheduleNotifications() {
+  await registerForPushNotificationsAsync();
+  const settingsService = new SettingsService();
+
+  Notifications.setNotificationHandler({
+		handleNotification: async () => ({
+			shouldShowBanner: true,
+			shouldShowList: true,
+			shouldPlaySound: false,
+			shouldSetBadge: false,
+		}),
+	});
+
+  await registerForPushNotificationsAsync();
+  const settings = await settingsService.getSettings();
+
+  const existingNotifications =
+    await Notifications.getAllScheduledNotificationsAsync();
+
+  // Avoid scheduling duplicates
+  const alreadyScheduled = existingNotifications.some((n) => {
+    const { trigger } = n;
+    if (!trigger || typeof trigger !== "object" || !("type" in trigger))
+      return false;
+    return (
+      trigger.type === SchedulableTriggerInputTypes.DAILY &&
+      trigger.hour === 20 &&
+      trigger.minute === 0
+    );
+  });
+
+  const logScheduledNotifications = async () => {
+    const scheduled =
+      await Notifications.getAllScheduledNotificationsAsync();
+    console.log(
+      "Scheduled notifications:",
+      JSON.stringify(scheduled, null, 2)
+    );
+  };
+
+  logScheduledNotifications();
+
+  if (!alreadyScheduled && settings?.allowNotifications) {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Sadhana List",
+        body: "Did you add your sadhana today?",
+      },
+      trigger: {
+        type: SchedulableTriggerInputTypes.DAILY,
+        hour: 20,
+        minute: 0,
+      },
+    });
+  }
+
+  // Return updated list
+  return await Notifications.getAllScheduledNotificationsAsync();
 }
