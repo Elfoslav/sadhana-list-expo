@@ -42,6 +42,9 @@ EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
+EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=...
+EXPO_PUBLIC_PIN_ENCRYPTION_KEY=your_encryption_key
+NODE_ENV=development # change to production when building for production
 ```
 
 ---
