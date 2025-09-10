@@ -8,6 +8,7 @@ import {
 	registerForPushNotificationsAsync,
 	showNotification,
 	scheduleNotifications,
+	disableNotifications,
 } from "../lib/functions";
 import SettingsService from "../services/SettingsService";
 import PinModal from "../components/PinModal";
@@ -58,16 +59,6 @@ export default function SettingsView() {
 	useEffect(() => {
 		console.log("existingNotifications updated:", existingNotifications);
 	}, [existingNotifications]);
-
-	const disableNotifications = async () => {
-		const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-
-		for (const notification of scheduled) {
-			await Notifications.cancelScheduledNotificationAsync(
-				notification.identifier
-			);
-		}
-	};
 
 	const onValueChange = async (value: boolean) => {
 		setAllowNotifications(value);

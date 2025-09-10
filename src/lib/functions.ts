@@ -75,6 +75,9 @@ export async function showNotification(title: string, body: string) {
 export async function scheduleNotifications() {
   await registerForPushNotificationsAsync();
   const settingsService = new SettingsService();
+  const settings = await settingsService.getSettings();
+  const existingNotifications =
+    await Notifications.getAllScheduledNotificationsAsync();
 
   Notifications.setNotificationHandler({
 		handleNotification: async () => ({
@@ -84,12 +87,6 @@ export async function scheduleNotifications() {
 			shouldSetBadge: false,
 		}),
 	});
-
-  await registerForPushNotificationsAsync();
-  const settings = await settingsService.getSettings();
-
-  const existingNotifications =
-    await Notifications.getAllScheduledNotificationsAsync();
 
   // Avoid scheduling duplicates
   const alreadyScheduled = existingNotifications.some((n) => {
@@ -131,3 +128,7 @@ export async function scheduleNotifications() {
   // Return updated list
   return await Notifications.getAllScheduledNotificationsAsync();
 }
+
+export async function disableNotifications() {
+  await Notifications.cancelAllScheduledNotificationsAsync();
+};

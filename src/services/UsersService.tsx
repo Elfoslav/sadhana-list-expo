@@ -81,7 +81,7 @@ class UsersService {
 				networkState.isConnected && networkState.isInternetReachable;
 
 			if (isConnected) {
-				console.log("savingu ser in Firebase: ", user.pin, user);
+				console.log("saving user in Firebase: ", user.username);
 				// Backup data in firestore DB
 				this.userFirestore.saveUser(user);
 			}
