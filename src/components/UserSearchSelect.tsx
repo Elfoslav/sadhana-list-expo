@@ -5,14 +5,13 @@ import User from "../models/User";
 import {
 	View,
 	TextInput,
-	FlatList,
-	Text,
-	TouchableOpacity,
 	StyleSheet,
 	ViewStyle,
 	TextStyle,
 	StyleProp,
+	ActivityIndicator,
 } from "react-native";
+import DraggableList from "./DraggableList";
 
 type UserSearchSelectProps = {
 	onChange?: (value: string) => void;
@@ -35,6 +34,7 @@ export default function UserSearchSelect({
 	const [users, setUsers] = useState<User[]>([]);
 	const [userSelected, setUserSelected] = useState(false);
 	const [showDropdown, setShowDropdown] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	async function fetchUsers(query: string): Promise<User[]> {
 		if (!query.trim()) return [];
@@ -60,13 +60,20 @@ export default function UserSearchSelect({
 		if (searchText.trim() === "") {
 			setUsers([]);
 			setShowDropdown(false);
+			setLoading(false);
 			return;
 		}
 
 		const timeoutId = setTimeout(async () => {
-			const fetchedUsers = await fetchUsers(searchText);
+			setLoading(true);
+			let fetchedUsers = await fetchUsers(searchText);
+			// Remove exact match with current input to avoid duplicates
+			fetchedUsers = fetchedUsers.filter(
+				(u) => u.username.toLowerCase() !== searchText.toLowerCase()
+			);
 			setUsers(fetchedUsers);
 			setShowDropdown(true);
+			setLoading(false);
 		}, 400); // delay in ms
 
 		return () => clearTimeout(timeoutId);
@@ -81,23 +88,16 @@ export default function UserSearchSelect({
 				style={[commonStyles.textInput, style.input]}
 			/>
 
-			{showDropdown && !userSelected && users.length > 0 && (
-				<FlatList
-					style={[styles.dropdown, style.dropdown]}
-					data={users}
-					keyExtractor={(item) => item.username}
-					renderItem={({ item }) => (
-						<TouchableOpacity
-							onPress={() => onUserSelect(item)}
-							style={[styles.dropdownItem, style.dropdownItem]}
-						>
-							<Text style={[styles.dropdownItemText, style.dropdownItemText]}>
-								{item.username}
-							</Text>
-						</TouchableOpacity>
-					)}
-					keyboardShouldPersistTaps="handled"
+			{loading && (
+				<ActivityIndicator
+					size="small"
+					color="#555"
+					style={styles.loadingIndicator}
 				/>
+			)}
+
+			{showDropdown && !userSelected && !loading && users.length > 0 && (
+				<DraggableList users={users} onSelectUser={onUserSelect} />
 			)}
 		</View>
 	);
@@ -107,31 +107,11 @@ const styles = StyleSheet.create({
 	container: {
 		width: "100%",
 		position: "relative",
+		zIndex: 1,
 	},
-	dropdown: {
+	loadingIndicator: {
 		position: "absolute",
-		top: 52,
-		left: 0,
-		right: 0,
-		maxHeight: 200,
-		borderColor: "#aaa",
-		borderWidth: 1,
-		borderRadius: 4,
-		backgroundColor: "#fff",
-		zIndex: 1000,
-		overflow: "scroll",
-	},
-	dropdownItem: {
-		paddingVertical: 14,
-		paddingHorizontal: 12,
-		borderBottomColor: "#ddd",
-		borderBottomWidth: 1,
-	},
-	dropdownItemText: {
-		fontSize: 16,
-	},
-	notFoundText: {
-		fontStyle: "italic",
-		color: "#999",
+		right: 10,
+		top: 12,
 	},
 });
