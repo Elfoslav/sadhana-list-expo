@@ -2,7 +2,7 @@
   "expo": {
     "name": "Sadhana List",
     "slug": "sadhanaList",
-    "version": "1.16.0",
+    "version": "1.17.0",
     "orientation": "portrait",
     "icon": "./assets/iskcon-logo-icon.png",
     "scheme": "sadhanalist",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "android": {
       "package": "com.sadhanalist",
-      "versionCode": 17,
+      "versionCode": 28,
       "adaptiveIcon": {
         "foregroundImage": "./assets/iskcon-logo-padding-120.png",
         "backgroundColor": "#ffffff"
