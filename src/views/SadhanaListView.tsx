@@ -113,6 +113,7 @@ const SadhanaListView: React.FC = () => {
 					guruPuja: sadhanaItem ? sadhanaItem.guruPuja : false,
 					gauraArati: sadhanaItem ? sadhanaItem.gauraArati : false,
 					japaRounds: sadhanaItem ? sadhanaItem.japaRounds : 0,
+					wakeUpTime: sadhanaItem ? sadhanaItem.wakeUpTime : 0,
 					reading: sadhanaItem ? sadhanaItem.reading : 0,
 					note: sadhanaItem ? sadhanaItem.note : "",
 				};
@@ -306,6 +307,27 @@ const SadhanaListView: React.FC = () => {
 						<MaterialIcons name="edit" color="gray" size={22} />
 					</Button>
 				</View>
+
+				{sadhana.wakeUpTime != null && sadhana.wakeUpTime > 0 && (
+					<View style={commonStyles.flexRow}>
+						<Text style={commonStyles.textBold}>Woke up: </Text>
+						<Text>
+							{/* hh:mm */}
+							{String(Math.floor(sadhana.wakeUpTime / 60)).padStart(2, "0")}:
+							{String(sadhana.wakeUpTime % 60).padStart(2, "0")}
+						</Text>
+					</View>
+				)}
+
+				{sadhana.reading != null && sadhana.reading > 0 && (
+					<View style={commonStyles.flexRow}>
+						<Text style={commonStyles.textBold}>Reading: </Text>
+						<Text style={{ marginLeft: 3 }}>
+							{Math.floor(sadhana.reading / 60)}h{" "}
+							{sadhana.reading % 60 > 0 ? `${sadhana.reading % 60}m` : ""}
+						</Text>
+					</View>
+				)}
 
 				{sadhana.note && (
 					<View style={styles.note}>

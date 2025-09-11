@@ -15,7 +15,7 @@ import PinInput from "./PinInput";
 import User from "../models/User";
 import { decryptPin } from "../lib/functions";
 
-const BUTTON_WIDTH = 127;
+const BUTTON_WIDTH = 117;
 
 interface PinModalProps {
 	isVisible: boolean;
@@ -58,7 +58,7 @@ const PinModal: React.FC<PinModalProps> = ({
 				<View style={modalStyles.centeredView}>
 					<TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
 						<View style={modalStyles.modalView}>
-							<Text style={modalStyles.header}>Enter PIN</Text>
+							<Text style={modalStyles.innerHeader}>Enter PIN</Text>
 
 							<PinInput value={pin} onChange={setPin} />
 

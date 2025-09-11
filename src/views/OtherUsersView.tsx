@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useRouter, useFocusEffect } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import {
@@ -10,6 +10,7 @@ import {
 	Alert,
 	Text,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import commonStyles from "../styles/commonStyles";
 import { usersService } from "../services/usersServiceInstance";
 import Button from "../components/ui/Button";
@@ -19,6 +20,7 @@ import User from "../models/User";
 import DraggableList from "../components/DraggableList";
 
 function OtherUsersView() {
+	const insets = useSafeAreaInsets();
 	const router = useRouter();
 	const [username, setUsername] = useState("");
 	const [users, setUsers] = useState<User[]>([]);
@@ -121,7 +123,13 @@ function OtherUsersView() {
 	};
 
 	return (
-		<View style={[commonStyles.container, backgroundStyle, { height: "100%" }]}>
+		<View
+			style={[
+				commonStyles.container,
+				backgroundStyle,
+				{ paddingTop: insets.top, height: "100%" },
+			]}
+		>
 			<StatusBar
 				barStyle={isDarkMode ? "light-content" : "dark-content"}
 				backgroundColor={backgroundStyle.backgroundColor}

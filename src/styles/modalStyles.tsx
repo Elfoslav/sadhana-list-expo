@@ -12,6 +12,19 @@ const modalStyles = StyleSheet.create({
 		alignItems: "center",
 	},
 	header: {
+		width: 300,
+		top: 20,
+		padding: 10,
+		borderBottomWidth: 1,
+		borderBottomColor: "#AAA",
+		textAlign: "center",
+		marginBottom: 15,
+		backgroundColor: "#DDD",
+		zIndex: 1,
+		borderTopLeftRadius: 5,
+		borderTopRightRadius: 5,
+	},
+	innerHeader: {
 		textAlign: "center",
 		marginBottom: 15,
 		fontSize: 18,
@@ -21,7 +34,7 @@ const modalStyles = StyleSheet.create({
 		backgroundColor: "white",
 		borderRadius: 5,
 		width: 300,
-		padding: 15,
+		padding: 25,
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
@@ -32,21 +45,31 @@ const modalStyles = StyleSheet.create({
 		elevation: 5,
 	},
 	formField: {
+		gap: 10,
 		flexDirection: "row",
+		justifyContent: "space-between",
 		alignItems: "center",
-		justifyContent: "center",
-		marginBottom: 22,
+		marginBottom: 10,
+	},
+	textareaField: {
+		marginTop: 8,
+		marginBottom: 20,
 	},
 	input: {
-		height: 38,
-		width: 80,
+		height: 32,
+		width: 40,
 		borderWidth: 1,
 		borderColor: "#ccc",
 		borderRadius: 8,
-		fontSize: 16,
+		fontSize: 14,
 		textAlign: "center",
 		color: "#333",
 		backgroundColor: "#f9f9f9",
+		paddingBottom: 6,
+	},
+	inputLabel: {
+		fontSize: 17,
+		fontWeight: "500",
 	},
 	buttonsWrapper: {
 		flexDirection: "row", // Arrange children horizontally
@@ -80,6 +103,16 @@ const modalStyles = StyleSheet.create({
 	textStyle: {
 		color: "white",
 		fontWeight: "bold",
+	},
+	dayText: {
+		fontSize: 18,
+		fontWeight: "600",
+		color: "#666",
+	},
+	dateText: {
+		fontSize: 20,
+		fontWeight: "700",
+		color: "#555",
 	},
 });
 

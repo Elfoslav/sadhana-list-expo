@@ -39,7 +39,7 @@ const Button = ({
 	return (
 		<TouchableOpacity
 			onPress={onPress}
-			activeOpacity={0.85}
+			activeOpacity={0.55}
 			style={baseStyle}
 			disabled={disabled}
 		>

@@ -118,8 +118,8 @@ export default function SettingsView() {
 					const trigger = notification.trigger;
 					if (!isDailyTrigger(trigger)) return null;
 					return (
-						<View style={styles.row}>
-							<Text key={notification.identifier} style={styles.textGray}>
+						<View key={notification.identifier} style={styles.row}>
+							<Text style={styles.textGray}>
 								Notification "{notification.content.title}" scheduled at{" "}
 								{trigger.hour}:{trigger.minute.toString().padStart(2, "0")}
 							</Text>

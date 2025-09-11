@@ -6,6 +6,7 @@ interface SadhanaData {
   gauraArati: boolean;
   japaRounds: number | null;
   reading: number | null;
+  wakeUpTime: number | null;
   note?: string;
 }
 

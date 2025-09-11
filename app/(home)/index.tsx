@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import MySadhanaScreen from "./index";
+import HomeScreen from "./home";
 import OtherUsersScreen from "./other-users";
 import CustomTabs from "./components/CustomTabs";
 
-export default function TabsLayout() {
+export default function TabsScreen() {
 	const [currentIndex, setCurrentIndex] = useState(0);
 
 	const screens = [
-		<MySadhanaScreen key="my-sadhana" />,
+		<HomeScreen key="home" />,
 		<OtherUsersScreen key="other-users" />,
 	];
 

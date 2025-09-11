@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import { useAppState } from "../stores/useAppState";
-import {
-	View,
-	StyleSheet,
-	StatusBar,
-	useColorScheme,
-	Image,
-	TextInput,
-	Alert,
-	Text,
-} from "react-native";
+import { View, StyleSheet, Image, TextInput, Alert, Text } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import commonStyles from "../styles/commonStyles";
 import SettingsService from "../services/SettingsService";
 import { usersService } from "../services/usersServiceInstance";
@@ -19,16 +10,13 @@ import { useUserStore } from "../stores/useUserStore";
 import Button from "../components/ui/Button";
 
 function HomeView() {
+	const insets = useSafeAreaInsets();
 	const router = useRouter();
 	const settingsService = new SettingsService();
 	const setUser = useUserStore((state) => state.setUser);
 	const [username, setUsername] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	const isDarkMode = useColorScheme() === "dark";
 	const { redirectedToSadhana, setRedirectedToSadhana } = useAppState();
-	const backgroundStyle = {
-		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-	};
 
 	const checkUserData = async (username: string) => {
 		if (username) {
@@ -136,11 +124,12 @@ function HomeView() {
 	}, []);
 
 	return (
-		<View style={[commonStyles.container, backgroundStyle]}>
-			<StatusBar
-				barStyle={isDarkMode ? "light-content" : "dark-content"}
-				backgroundColor={backgroundStyle.backgroundColor}
-			/>
+		<View
+			style={[
+				commonStyles.container,
+				{ paddingTop: insets.top, height: "100%" },
+			]}
+		>
 			<View>
 				<Text style={commonStyles.heading}>My Sadhana</Text>
 				<Image

@@ -8,10 +8,12 @@ import {
 } from "react-native";
 import Button from "./ui/Button";
 import SadhanaData from "../models/SadhanaData";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import commonStyles from "../styles/commonStyles";
 import modalStyles from "../styles/modalStyles";
 import { formatDate, getAbbreviatedDayName } from "../lib/functions";
+import TimePicker from "./TimePicker";
+import DurationPicker from "./DurationPicker";
 
 interface SadhanaModalProps {
 	isVisible: boolean;
@@ -21,7 +23,7 @@ interface SadhanaModalProps {
 	closeModal: () => void;
 }
 
-const BUTTON_WIDTH = 127;
+const BUTTON_WIDTH = 117;
 
 const SadhanaModal: React.FC<SadhanaModalProps> = ({
 	isVisible,
@@ -33,7 +35,7 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 	const [localSadhanaData, setLocalSadhanaData] =
 		useState<SadhanaData>(sadhanaData);
 
-	const handleChange = (value: string, attrName: string) => {
+	const handleChange = (value: string | number, attrName: string) => {
 		console.log(localSadhanaData);
 		setLocalSadhanaData({
 			...localSadhanaData,
@@ -56,31 +58,39 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 				onPressOut={closeModal}
 			>
 				<View style={modalStyles.centeredView}>
+					{sadhanaData?.date && (
+						<Text style={modalStyles.header}>
+							<Text style={modalStyles.dayText}>
+								{getAbbreviatedDayName(sadhanaData.date)}{" "}
+							</Text>
+							<Text style={modalStyles.dateText}>
+								{formatDate(sadhanaData.date)}
+							</Text>
+						</Text>
+					)}
 					<TouchableWithoutFeedback>
 						<View style={modalStyles.modalView}>
-							{/* <Pressable style={styles.closeButton} onPress={closeModal}>
-                <Icon name="close" />
-              </Pressable>
-
-							{/* <View style={styles.formField}>
-                <TextInput
-                  style={styles.numericInput}
-                  keyboardType="numeric"
-                  value={localSadhanaData?.japaRounds ? localSadhanaData.japaRounds.toString() : ''}
-                  placeholder="0"
-                  onChangeText={(value) => handleChange(value, 'japaRounds')}
-                />
-                <Text>Japa rounds</Text>
-              </View> */}
-
-							{sadhanaData?.date && (
-								<Text style={modalStyles.header}>
-									{getAbbreviatedDayName(sadhanaData.date)}{" "}
-									{formatDate(sadhanaData.date)}
-								</Text>
-							)}
+							<View style={modalStyles.formField}>
+								<Text style={modalStyles.inputLabel}>Wake up time</Text>
+								<TimePicker
+									value={localSadhanaData?.wakeUpTime}
+									onChange={(val) => handleChange(val, "wakeUpTime")}
+									textStyle={{ fontSize: 15 }}
+									disabled={readOnly}
+									is24Hour
+								/>
+							</View>
 
 							<View style={modalStyles.formField}>
+								<Text style={modalStyles.inputLabel}>Reading time</Text>
+								<DurationPicker
+									value={localSadhanaData?.reading || 0}
+									onChange={(minutes) => handleChange(minutes, "reading")}
+									disabled={readOnly}
+								/>
+							</View>
+
+							<View style={[modalStyles.formField, modalStyles.textareaField]}>
 								<TextInput
 									multiline
 									numberOfLines={3}

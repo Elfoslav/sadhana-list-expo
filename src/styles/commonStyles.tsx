@@ -15,9 +15,11 @@ const styles = StyleSheet.create({
 	},
 	flexRow: {
 		flexDirection: "row",
-		justifyContent: "space-between",
 		alignItems: "center",
-		gap: 15,
+		gap: 5,
+	},
+	spaceBetween: {
+		justifyContent: "space-between",
 	},
 	textInput: {
 		borderColor: "#aaa",
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		fontWeight: "bold",
 		textAlign: "center",
-		marginTop: 10,
+		marginTop: 20,
 		marginBottom: 5,
 	},
 });
