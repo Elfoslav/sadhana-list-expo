@@ -13,6 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 type Props = {
 	value: number | null; // minutes since midnight
 	onChange: (minutes: number) => void;
+	shown?: boolean;
 	disabled?: boolean;
 	is24Hour?: boolean;
 	style?: StyleProp<ViewStyle>;
@@ -24,6 +25,7 @@ type Props = {
 export default function TimePicker({
 	value,
 	onChange,
+	shown = false,
 	disabled = false,
 	is24Hour = false,
 	style,
@@ -31,7 +33,7 @@ export default function TimePicker({
 	iconColor = "#BBB",
 	iconSize = 24,
 }: Props) {
-	const [show, setShow] = useState(false);
+	const [show, setShow] = useState(shown);
 
 	// Convert minutes to Date
 	const getDateFromMinutes = (minutes: number | null) => {
