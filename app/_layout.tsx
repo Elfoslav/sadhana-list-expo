@@ -3,7 +3,7 @@ import { Stack, useRouter } from "expo-router";
 import { Pressable, StatusBar, useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { Colors } from "../src/lib/colors";
 import { setBackgroundColorAsync } from "expo-system-ui";
 import Toast from "react-native-toast-message";
 

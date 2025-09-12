@@ -115,6 +115,7 @@ const SadhanaListView: React.FC = () => {
 					japaRounds: sadhanaItem ? sadhanaItem.japaRounds : 0,
 					wakeUpTime: sadhanaItem ? sadhanaItem.wakeUpTime : 0,
 					reading: sadhanaItem ? sadhanaItem.reading : 0,
+					service: sadhanaItem ? sadhanaItem.service : 0,
 					note: sadhanaItem ? sadhanaItem.note : "",
 				};
 			}
@@ -308,30 +309,32 @@ const SadhanaListView: React.FC = () => {
 					</Button>
 				</View>
 
-				{sadhana.wakeUpTime != null && sadhana.wakeUpTime > 0 && (
-					<View style={commonStyles.flexRow}>
-						<Text style={commonStyles.textBold}>Woke up: </Text>
-						<Text>
-							{/* hh:mm */}
-							{String(Math.floor(sadhana.wakeUpTime / 60)).padStart(2, "0")}:
-							{String(sadhana.wakeUpTime % 60).padStart(2, "0")}
-						</Text>
-					</View>
-				)}
+				<View style={{ flex: 1, flexDirection: "row", gap: 15 }}>
+					{sadhana.wakeUpTime != null && sadhana.wakeUpTime > 0 && (
+						<View style={commonStyles.flexRow}>
+							<Text style={commonStyles.textBold}>Woke up: </Text>
+							<Text>
+								{/* hh:mm */}
+								{String(Math.floor(sadhana.wakeUpTime / 60)).padStart(2, "0")}:
+								{String(sadhana.wakeUpTime % 60).padStart(2, "0")}
+							</Text>
+						</View>
+					)}
 
-				{sadhana.reading != null && sadhana.reading > 0 && (
-					<View style={commonStyles.flexRow}>
-						<Text style={commonStyles.textBold}>Reading: </Text>
-						<Text style={{ marginLeft: 3 }}>{getHHmm(sadhana.reading)}</Text>
-					</View>
-				)}
+					{sadhana.reading != null && sadhana.reading > 0 && (
+						<View style={commonStyles.flexRow}>
+							<Text style={commonStyles.textBold}>Reading: </Text>
+							<Text>{getHHmm(sadhana.reading)}</Text>
+						</View>
+					)}
 
-				{sadhana.service != null && sadhana.service > 0 && (
-					<View style={commonStyles.flexRow}>
-						<Text style={commonStyles.textBold}>Reading: </Text>
-						<Text style={{ marginLeft: 3 }}>{getHHmm(sadhana.service)}</Text>
-					</View>
-				)}
+					{sadhana.service != null && sadhana.service > 0 && (
+						<View style={commonStyles.flexRow}>
+							<Text style={commonStyles.textBold}>Service: </Text>
+							<Text>{getHHmm(sadhana.service)}</Text>
+						</View>
+					)}
+				</View>
 
 				{sadhana.note && (
 					<View style={styles.note}>

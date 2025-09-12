@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import { useRouter, useFocusEffect } from "expo-router";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import {
 	View,
 	StyleSheet,
@@ -18,6 +17,7 @@ import UserSearchSelect from "../components/UserSearchSelect";
 import OtherUsersAsyncStore from "../stores/OtherUsersAsyncStore";
 import User from "../models/User";
 import DraggableList from "../components/DraggableList";
+import { Colors } from "../lib/colors";
 
 function OtherUsersView() {
 	const insets = useSafeAreaInsets();
