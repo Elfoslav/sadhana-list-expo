@@ -90,6 +90,15 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 								/>
 							</View>
 
+							<View style={modalStyles.formField}>
+								<Text style={modalStyles.inputLabel}>Service time</Text>
+								<DurationPicker
+									value={localSadhanaData?.service || 0}
+									onChange={(minutes) => handleChange(minutes, "service")}
+									disabled={readOnly}
+								/>
+							</View>
+
 							<View style={[modalStyles.formField, modalStyles.textareaField]}>
 								<TextInput
 									multiline

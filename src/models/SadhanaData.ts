@@ -7,6 +7,7 @@ interface SadhanaData {
   japaRounds: number | null;
   reading: number | null;
   wakeUpTime: number | null;
+  service: number | null;
   note?: string;
 }
 

@@ -18,7 +18,7 @@ import UsersService from "../services/UsersService";
 import SadhanaData from "../models/SadhanaData";
 import User from "../models/User";
 import SadhanaManager from "../lib/SadhanaManager";
-import { formatDate, getAbbreviatedDayName } from "../lib/functions";
+import { formatDate, getAbbreviatedDayName, getHHmm } from "../lib/functions";
 import Button from "../components/ui/Button";
 import CheckBox from "../components/ui/CheckBox";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -322,10 +322,14 @@ const SadhanaListView: React.FC = () => {
 				{sadhana.reading != null && sadhana.reading > 0 && (
 					<View style={commonStyles.flexRow}>
 						<Text style={commonStyles.textBold}>Reading: </Text>
-						<Text style={{ marginLeft: 3 }}>
-							{Math.floor(sadhana.reading / 60)}h{" "}
-							{sadhana.reading % 60 > 0 ? `${sadhana.reading % 60}m` : ""}
-						</Text>
+						<Text style={{ marginLeft: 3 }}>{getHHmm(sadhana.reading)}</Text>
+					</View>
+				)}
+
+				{sadhana.service != null && sadhana.service > 0 && (
+					<View style={commonStyles.flexRow}>
+						<Text style={commonStyles.textBold}>Reading: </Text>
+						<Text style={{ marginLeft: 3 }}>{getHHmm(sadhana.service)}</Text>
 					</View>
 				)}
 

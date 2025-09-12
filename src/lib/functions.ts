@@ -132,3 +132,9 @@ export async function scheduleNotifications() {
 export async function disableNotifications() {
   await Notifications.cancelAllScheduledNotificationsAsync();
 };
+
+export function getHHmm(minutes: number) {
+  return `${Math.floor(minutes / 60)}h ${
+    minutes % 60 > 0 ? `${minutes % 60}m` : ""
+  }`;
+};
