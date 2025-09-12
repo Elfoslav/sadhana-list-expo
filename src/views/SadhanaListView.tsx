@@ -523,7 +523,8 @@ const styles = StyleSheet.create({
 	footer: {
 		borderWidth: 1,
 		backgroundColor: "#EAEAEA",
-		borderTopColor: "red",
+		borderTopColor: "#CACACA",
+		elevation: 14,
 	},
 });
 
