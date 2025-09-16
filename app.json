@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "Sadhana List",
-    "slug": "sadhanaList",
-    "version": "1.18.0",
+    "slug": "sadhanalist",
+    "owner": "elfoslav",
+    "version": "1.19.0",
     "orientation": "portrait",
     "icon": "./assets/iskcon-logo-icon.png",
     "scheme": "sadhanalist",
@@ -10,7 +11,7 @@
     "newArchEnabled": true,
     "android": {
       "package": "com.sadhanalist",
-      "versionCode": 30,
+      "versionCode": 39,
       "adaptiveIcon": {
         "foregroundImage": "./assets/iskcon-logo-padding-120.png",
         "backgroundColor": "#ffffff"
@@ -35,8 +36,8 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "d2473c22-2faf-4e37-801d-210ed75e900c"
-      }
+        "projectId": "c64a8d0e-7989-4cdc-8453-958c542c3b3d"
+      },
     },
     "runtimeVersion": {
       "policy": "appVersion"

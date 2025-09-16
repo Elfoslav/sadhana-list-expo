@@ -2,7 +2,7 @@ import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import { SchedulableTriggerInputTypes } from "expo-notifications";
 import SettingsService from "../../src/services/SettingsService";
-import CryptoES from "crypto-es";
+import { AES, Utf8 } from "crypto-es";
 
 // Secret key - must be kept private
 const ENCRYPTION_KEY = process.env.EXPO_PUBLIC_PIN_ENCRYPTION_KEY;
@@ -10,14 +10,14 @@ const ENCRYPTION_KEY = process.env.EXPO_PUBLIC_PIN_ENCRYPTION_KEY;
 // Encrypt a PIN (string)
 export function encryptPin(pin: string): string {
   console.log(pin, ENCRYPTION_KEY);
-  const encrypted = CryptoES.AES.encrypt(pin, ENCRYPTION_KEY);
+  const encrypted = AES.encrypt(pin, ENCRYPTION_KEY);
   return encrypted.toString(); // returns ciphertext string (base64 by default)
 }
 
 // Decrypt the encrypted PIN
 export function decryptPin(cipherText: string): string {
-  const decrypted = CryptoES.AES.decrypt(cipherText, ENCRYPTION_KEY);
-  return decrypted.toString(CryptoES.enc.Utf8);
+  const decrypted = AES.decrypt(cipherText, ENCRYPTION_KEY);
+  return decrypted.toString(Utf8);
 }
 
 export function dateReviver(key: string, value: any) {
