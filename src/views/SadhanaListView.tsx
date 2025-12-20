@@ -18,6 +18,7 @@ import UsersService from "../services/UsersService";
 import SadhanaData from "../models/SadhanaData";
 import User from "../models/User";
 import SadhanaManager from "../lib/SadhanaManager";
+import { useUserStore } from "../stores/useUserStore";
 import { formatDate, getAbbreviatedDayName, getHHmm } from "../lib/functions";
 import Button from "../components/ui/Button";
 import CheckBox from "../components/ui/CheckBox";
@@ -47,7 +48,8 @@ const SadhanaListView: React.FC = () => {
 	const usersService = new UsersService();
 	const sadhanaManager = new SadhanaManager();
 	const initialDate = new Date();
-	const [user, setUser] = useState<User | null>(null);
+	const user = useUserStore((state) => state.user);
+	const setUser = useUserStore((state) => state.setUser);
 	const [isLoading, setIsLoading] = useState(true);
 	const [currentDate, setCurrentDate] = useState(initialDate);
 	// current shown sadhana list
@@ -93,7 +95,7 @@ const SadhanaListView: React.FC = () => {
 		if (readOnly) {
 			foundUser = (await usersService.getRemoteUser(username)) as User;
 		} else {
-			foundUser = (await usersService.getUser(username)) as User;
+			foundUser = user || ((await usersService.getUser(username)) as User);
 		}
 
 		return Array.from({ length: numberOfDaysInMonth }, (_, i) => i + 1).map(
@@ -234,23 +236,6 @@ const SadhanaListView: React.FC = () => {
 
 		fetchData();
 	}, [currentDate]);
-
-	useEffect(() => {
-		const getUser = async () => {
-			let foundUser;
-			if (readOnly) {
-				foundUser = await usersService.getRemoteUser(username);
-			} else {
-				foundUser = await usersService.getUser(username);
-			}
-
-			if (foundUser) {
-				setUser(foundUser);
-			}
-		};
-
-		getUser();
-	}, []);
 
 	const renderItem = ({
 		item,
