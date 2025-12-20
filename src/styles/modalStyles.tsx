@@ -1,18 +1,22 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
+const modalWidth = width * 0.81;
 
 const modalStyles = StyleSheet.create({
 	modalBackground: {
 		flex: 1,
-		backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the opacity here
+		backgroundColor: "rgba(0, 0, 0, 0.4)", // Adjust the opacity here
 		justifyContent: "center",
 		alignItems: "center",
+		paddingHorizontal: 10,
 	},
 	centeredView: {
 		justifyContent: "center",
 		alignItems: "center",
 	},
 	header: {
-		width: 300,
+		width: modalWidth,
 		top: 20,
 		padding: 10,
 		borderBottomWidth: 1,
@@ -33,7 +37,7 @@ const modalStyles = StyleSheet.create({
 	modalView: {
 		backgroundColor: "white",
 		borderRadius: 5,
-		width: 300,
+		width: modalWidth,
 		padding: 25,
 		shadowColor: "#000",
 		shadowOffset: {

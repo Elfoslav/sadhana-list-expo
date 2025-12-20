@@ -94,7 +94,6 @@ export function useBootstrapUser() {
 			localUser && setLocalUser(localUser);
 
 			// If no remote user, create one
-			console.log("remoteUser", remoteUser);
 			if (!remoteUser) {
 				const newUser = await usersService.createUser({
 					username: trimmedUsername,

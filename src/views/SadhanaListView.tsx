@@ -78,6 +78,18 @@ const SadhanaListView: React.FC = () => {
 		};
 	}, [sadhanaList]);
 
+	const getSleepDuration = (
+		wakeUpTime: number | null,
+		bedTime: number | null
+	) => {
+		if (!wakeUpTime || !bedTime) return null;
+
+		// duration in hours
+		const diffMs = wakeUpTime - bedTime;
+		const diffH = diffMs / 1000 / 60 / 60;
+		return diffH > 0 ? diffH.toFixed(2) : null;
+	};
+
 	async function generateSadhanaList(
 		date: Date,
 		username: string
@@ -115,7 +127,8 @@ const SadhanaListView: React.FC = () => {
 					guruPuja: sadhanaItem ? sadhanaItem.guruPuja : false,
 					gauraArati: sadhanaItem ? sadhanaItem.gauraArati : false,
 					japaRounds: sadhanaItem ? sadhanaItem.japaRounds : 0,
-					wakeUpTime: sadhanaItem ? sadhanaItem.wakeUpTime : 0,
+					bedTime: sadhanaItem ? sadhanaItem.bedTime : null,
+					wakeUpTime: sadhanaItem ? sadhanaItem.wakeUpTime : null,
 					reading: sadhanaItem ? sadhanaItem.reading : 0,
 					service: sadhanaItem ? sadhanaItem.service : 0,
 					note: sadhanaItem ? sadhanaItem.note : "",
@@ -152,6 +165,11 @@ const SadhanaListView: React.FC = () => {
 			};
 
 			setUser(updatedUser);
+			console.log(
+				"user.lastBedTime, user.lastWakeUpTime",
+				user.lastBedTime,
+				user.lastWakeUpTime
+			);
 			usersService.saveUser(updatedUser);
 		}
 	};
@@ -295,6 +313,17 @@ const SadhanaListView: React.FC = () => {
 				</View>
 
 				<View style={{ flex: 1, flexDirection: "row", gap: 15 }}>
+					{sadhana.bedTime != null && sadhana.bedTime > 0 && (
+						<View style={commonStyles.flexRow}>
+							<Text style={commonStyles.textBold}>Bed time: </Text>
+							<Text>
+								{/* hh:mm */}
+								{String(Math.floor(sadhana.bedTime / 60)).padStart(2, "0")}:
+								{String(sadhana.bedTime % 60).padStart(2, "0")}
+							</Text>
+						</View>
+					)}
+
 					{sadhana.wakeUpTime != null && sadhana.wakeUpTime > 0 && (
 						<View style={commonStyles.flexRow}>
 							<Text style={commonStyles.textBold}>Woke up: </Text>

@@ -6,6 +6,8 @@ interface User {
 	pin?: string;
 	sadhanaData: SadhanaData[];
 	updatedAt?: Timestamp;
+	lastBedTime?: number | null;
+	lastWakeUpTime?: number | null;
 }
 
 export default User;
