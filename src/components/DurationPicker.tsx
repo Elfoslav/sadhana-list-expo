@@ -2,24 +2,38 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 type DurationPickerProps = {
-	value: number; // total minutes
+	value: number | null; // total minutes
 	disabled?: boolean;
-	onChange: (minutes: number) => void;
+	onChange: (minutes: number | null) => void;
 };
 
 export default function DurationPicker({
-	value = 0,
+	value = null,
 	disabled,
 	onChange,
 }: DurationPickerProps) {
-	const [hours, setHours] = useState(Math.floor(value / 60).toString());
-	const [minutes, setMinutes] = useState((value % 60).toString());
+	const [hours, setHours] = useState("");
+	const [minutes, setMinutes] = useState("");
 
 	// Sync local state when value prop changes
 	useEffect(() => {
-		setHours(Math.floor(value / 60).toString());
-		setMinutes((value % 60).toString());
+		if (value === null) {
+			setHours("");
+			setMinutes("");
+		} else {
+			setHours(Math.floor(value / 60).toString());
+			setMinutes((value % 60).toString());
+		}
 	}, [value]);
+
+	const computeTotal = (h: string, m: string): number | null => {
+		if (h === "" && m === "") return null;
+
+		const hoursNum = parseInt(h) || 0;
+		const minutesNum = parseInt(m) || 0;
+
+		return hoursNum * 60 + minutesNum;
+	};
 
 	const clamp = (val: number, min: number, max: number) =>
 		Math.min(Math.max(val, min), max);
@@ -27,41 +41,45 @@ export default function DurationPicker({
 	const handleHoursChange = (text: string) => {
 		if (text === "") {
 			setHours("");
+			onChange(computeTotal("", minutes));
 			return;
 		}
 
 		const h = parseInt(text);
 		if (!isNaN(h)) {
-			setHours(text);
-			onChange(clamp(h, 0, 23) * 60 + (parseInt(minutes) || 0));
+			const clamped = clamp(h, 0, 23).toString();
+			setHours(clamped);
+			onChange(computeTotal(clamped, minutes));
 		}
 	};
 
 	const handleHoursBlur = () => {
-		const h = parseInt(hours) || 0;
-		const clamped = clamp(h, 0, 23);
-		setHours(clamped.toString());
-		onChange(clamped * 60 + (parseInt(minutes) || 0));
+		if (hours === "") return;
+		const clamped = clamp(parseInt(hours), 0, 23).toString();
+		setHours(clamped);
+		onChange(computeTotal(clamped, minutes));
 	};
 
 	const handleMinutesChange = (text: string) => {
 		if (text === "") {
 			setMinutes("");
+			onChange(computeTotal(hours, ""));
 			return;
 		}
 
 		const m = parseInt(text);
 		if (!isNaN(m)) {
-			setMinutes(text);
-			onChange((parseInt(hours) || 0) * 60 + clamp(m, 0, 59));
+			const clamped = clamp(m, 0, 59).toString();
+			setMinutes(clamped);
+			onChange(computeTotal(hours, clamped));
 		}
 	};
 
 	const handleMinutesBlur = () => {
-		const m = parseInt(minutes) || 0;
-		const clamped = clamp(m, 0, 59);
-		setMinutes(clamped.toString());
-		onChange((parseInt(hours) || 0) * 60 + clamped);
+		if (minutes === "") return;
+		const clamped = clamp(parseInt(minutes), 0, 59).toString();
+		setMinutes(clamped);
+		onChange(computeTotal(hours, clamped));
 	};
 
 	return (
@@ -71,6 +89,7 @@ export default function DurationPicker({
 					style={styles.input}
 					keyboardType="numeric"
 					value={hours}
+					placeholder="0"
 					onChangeText={handleHoursChange}
 					onBlur={handleHoursBlur}
 					maxLength={2}
@@ -83,6 +102,7 @@ export default function DurationPicker({
 					style={styles.input}
 					keyboardType="numeric"
 					value={minutes}
+					placeholder="0"
 					onChangeText={handleMinutesChange}
 					onBlur={handleMinutesBlur}
 					maxLength={2}
@@ -122,7 +142,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		fontWeight: "500",
 		padding: 0,
-		marginRight: 2,
+		paddingVertical: 2,
 	},
 	label: {
 		fontSize: 14,

@@ -1,13 +1,14 @@
 import {
 	Modal,
 	TextInput,
-	TouchableOpacity,
+	Pressable,
 	TouchableWithoutFeedback,
 	KeyboardAvoidingView,
 	Platform,
 	View,
 	Text,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import Button from "./ui/Button";
 import SadhanaData from "../models/SadhanaData";
 import { useUserStore } from "../stores/useUserStore";
@@ -26,7 +27,7 @@ interface SadhanaModalProps {
 	closeModal: () => void;
 }
 
-const BUTTON_WIDTH = 117;
+const BUTTON_WIDTH = "48%";
 
 const SadhanaModal: React.FC<SadhanaModalProps> = ({
 	isVisible,
@@ -42,7 +43,7 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 
 	console.log(sadhanaData);
 
-	const handleChange = (value: string | number, attrName: string) => {
+	const handleChange = (value: string | number | null, attrName: string) => {
 		console.log(localSadhanaData);
 		const newSadhanaData = {
 			...localSadhanaData,
@@ -79,106 +80,111 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 	}, [isVisible]);
 
 	return (
-		<Modal visible={isVisible} transparent={true} animationType="fade">
+		<Modal visible={isVisible} animationType="slide">
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 				style={{ flex: 1 }}
 			>
-				<TouchableOpacity
-					style={modalStyles.modalBackground}
-					activeOpacity={1}
-					onPressOut={closeModal}
-				>
-					<View style={modalStyles.centeredView}>
-						{sadhanaData?.date && (
-							<Text style={modalStyles.header}>
-								<Text style={modalStyles.dayText}>
-									{getAbbreviatedDayName(sadhanaData.date)}{" "}
+				<View style={modalStyles.centeredView}>
+					<View style={modalStyles.headerBar}>
+						<View>
+							{sadhanaData?.date && (
+								<Text style={modalStyles.header}>
+									<Text style={modalStyles.dayText}>
+										{getAbbreviatedDayName(sadhanaData.date)}{" "}
+									</Text>
+									<Text style={modalStyles.dateText}>
+										{formatDate(sadhanaData.date)}
+									</Text>
 								</Text>
-								<Text style={modalStyles.dateText}>
-									{formatDate(sadhanaData.date)}
-								</Text>
-							</Text>
-						)}
-						<TouchableWithoutFeedback>
-							<View style={modalStyles.modalView}>
-								<View style={modalStyles.formField}>
-									<Text style={modalStyles.inputLabel}>Bed time</Text>
-									<TimePicker
-										value={localSadhanaData?.bedTime}
-										onChange={(val) => handleChange(val, "bedTime")}
-										textStyle={{ fontSize: 15 }}
-										disabled={readOnly}
-										is24Hour
-									/>
-								</View>
-								<View style={modalStyles.formField}>
-									<Text style={modalStyles.inputLabel}>Wake up time</Text>
-									<TimePicker
-										value={localSadhanaData?.wakeUpTime}
-										onChange={(val) => handleChange(val, "wakeUpTime")}
-										textStyle={{ fontSize: 15 }}
-										disabled={readOnly}
-										is24Hour
-									/>
-								</View>
+							)}
+						</View>
 
-								<View style={modalStyles.formField}>
-									<Text style={modalStyles.inputLabel}>Reading time</Text>
-									<DurationPicker
-										value={localSadhanaData?.reading || 0}
-										onChange={(minutes) => handleChange(minutes, "reading")}
-										disabled={readOnly}
-									/>
-								</View>
-
-								<View style={modalStyles.formField}>
-									<Text style={modalStyles.inputLabel}>Service time</Text>
-									<DurationPicker
-										value={localSadhanaData?.service || 0}
-										onChange={(minutes) => handleChange(minutes, "service")}
-										disabled={readOnly}
-									/>
-								</View>
-
-								<View
-									style={[modalStyles.formField, modalStyles.textareaField]}
-								>
-									<TextInput
-										multiline
-										numberOfLines={3}
-										textAlignVertical="top"
-										style={commonStyles.textArea}
-										value={localSadhanaData?.note || ""}
-										placeholder="Note..."
-										onChangeText={(value) => handleChange(value, "note")}
-										editable={!readOnly}
-									/>
-								</View>
-
-								<View style={modalStyles.buttonsWrapper}>
-									{!readOnly && (
-										<Button
-											style={[modalStyles.button, { width: BUTTON_WIDTH }]}
-											onPress={() => confirmModal(localSadhanaData)}
-											title="Confirm"
-										/>
-									)}
-
-									<Button
-										style={[
-											modalStyles.button,
-											modalStyles.cancelButton,
-											{ width: readOnly ? "100%" : BUTTON_WIDTH },
-										]}
-										onPress={closeModal}
-										title={readOnly ? "Close" : "Cancel"}
-									/>
-								</View>
-							</View>
-						</TouchableWithoutFeedback>
+						<Pressable
+							onPress={closeModal}
+							hitSlop={10}
+							style={modalStyles.closeIcon}
+						>
+							<Ionicons name="close" size={26} color="#333" />
+						</Pressable>
 					</View>
-				</TouchableOpacity>
+					<TouchableWithoutFeedback>
+						<View style={modalStyles.modalView}>
+							<View style={modalStyles.formField}>
+								<Text style={modalStyles.inputLabel}>Bed time</Text>
+								<TimePicker
+									value={localSadhanaData?.bedTime}
+									onChange={(val) => handleChange(val, "bedTime")}
+									textStyle={{ fontSize: 15 }}
+									disabled={readOnly}
+									is24Hour
+								/>
+							</View>
+							<View style={modalStyles.formField}>
+								<Text style={modalStyles.inputLabel}>Wake up time</Text>
+								<TimePicker
+									value={localSadhanaData?.wakeUpTime}
+									onChange={(val) => handleChange(val, "wakeUpTime")}
+									textStyle={{ fontSize: 15 }}
+									disabled={readOnly}
+									is24Hour
+								/>
+							</View>
+
+							<View style={modalStyles.formField}>
+								<Text style={modalStyles.inputLabel}>Reading time</Text>
+								<DurationPicker
+									value={localSadhanaData?.reading || null}
+									onChange={(minutes) => handleChange(minutes, "reading")}
+									disabled={readOnly}
+								/>
+							</View>
+
+							<View style={modalStyles.formField}>
+								<Text style={modalStyles.inputLabel}>Service time</Text>
+								<DurationPicker
+									value={localSadhanaData?.service || null}
+									onChange={(minutes) => handleChange(minutes, "service")}
+									disabled={readOnly}
+								/>
+							</View>
+
+							<View style={[modalStyles.formField, modalStyles.textareaField]}>
+								<TextInput
+									multiline
+									numberOfLines={3}
+									textAlignVertical="top"
+									style={commonStyles.textArea}
+									value={localSadhanaData?.note || ""}
+									placeholder="Note..."
+									onChangeText={(value) => handleChange(value, "note")}
+									editable={!readOnly}
+								/>
+							</View>
+
+							<View style={modalStyles.buttonsWrapper}>
+								{!readOnly && (
+									<Button
+										style={[{ width: BUTTON_WIDTH }]}
+										size="lg"
+										onPress={() => confirmModal(localSadhanaData)}
+										title="Confirm"
+									/>
+								)}
+
+								<Button
+									style={[
+										modalStyles.cancelButton,
+										{ width: readOnly ? "100%" : BUTTON_WIDTH },
+									]}
+									size="lg"
+									onPress={closeModal}
+									title={readOnly ? "Close" : "Cancel"}
+								/>
+							</View>
+						</View>
+					</TouchableWithoutFeedback>
+				</View>
 			</KeyboardAvoidingView>
 		</Modal>
 	);

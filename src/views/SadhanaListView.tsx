@@ -79,15 +79,22 @@ const SadhanaListView: React.FC = () => {
 	}, [sadhanaList]);
 
 	const getSleepDuration = (
-		wakeUpTime: number | null,
-		bedTime: number | null
-	) => {
-		if (!wakeUpTime || !bedTime) return null;
+		bedTime: number | null,
+		wakeUpTime: number | null
+	): string | null => {
+		if (bedTime == null || wakeUpTime == null) return null;
 
-		// duration in hours
-		const diffMs = wakeUpTime - bedTime;
-		const diffH = diffMs / 1000 / 60 / 60;
-		return diffH > 0 ? diffH.toFixed(2) : null;
+		const MINUTES_IN_DAY = 24 * 60;
+
+		const durationMinutes =
+			bedTime > wakeUpTime
+				? MINUTES_IN_DAY - bedTime + wakeUpTime // crosses midnight
+				: wakeUpTime - bedTime;
+
+		const hours = Math.floor(durationMinutes / 60);
+		const minutes = durationMinutes % 60;
+
+		return `${hours}:${String(minutes).padStart(2, "0")}`;
 	};
 
 	async function generateSadhanaList(
@@ -335,6 +342,20 @@ const SadhanaListView: React.FC = () => {
 						</View>
 					)}
 
+					{sadhana.bedTime != null &&
+						sadhana.bedTime > 0 &&
+						sadhana.wakeUpTime != null &&
+						sadhana.wakeUpTime > 0 && (
+							<View style={commonStyles.flexRow}>
+								<Text style={commonStyles.textBold}>Sleep: </Text>
+								<Text>
+									{getSleepDuration(sadhana.bedTime, sadhana.wakeUpTime)}
+								</Text>
+							</View>
+						)}
+				</View>
+
+				<View style={{ flex: 1, flexDirection: "row", gap: 15 }}>
 					{sadhana.reading != null && sadhana.reading > 0 && (
 						<View style={commonStyles.flexRow}>
 							<Text style={commonStyles.textBold}>Reading: </Text>

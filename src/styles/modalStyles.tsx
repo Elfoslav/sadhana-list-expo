@@ -1,15 +1,18 @@
 import { StyleSheet, Dimensions } from "react-native";
 
 const { width } = Dimensions.get("window");
-const modalWidth = width * 0.81;
+const modalWidth = width * 0.99;
 
 const modalStyles = StyleSheet.create({
-	modalBackground: {
-		flex: 1,
-		backgroundColor: "rgba(0, 0, 0, 0.4)", // Adjust the opacity here
-		justifyContent: "center",
+	headerBar: {
+		position: "relative",
+		flexDirection: "row",
 		alignItems: "center",
-		paddingHorizontal: 10,
+		justifyContent: "space-between",
+		paddingHorizontal: 16,
+		paddingVertical: 12,
+		borderBottomWidth: 1,
+		borderBottomColor: "#eee",
 	},
 	centeredView: {
 		justifyContent: "center",
@@ -19,14 +22,18 @@ const modalStyles = StyleSheet.create({
 		width: modalWidth,
 		top: 20,
 		padding: 10,
-		borderBottomWidth: 1,
-		borderBottomColor: "#AAA",
 		textAlign: "center",
 		marginBottom: 15,
-		backgroundColor: "#DDD",
 		zIndex: 1,
 		borderTopLeftRadius: 5,
 		borderTopRightRadius: 5,
+	},
+	closeIcon: {
+		position: "absolute",
+		top: 42,
+		right: 30,
+		zIndex: 10,
+		elevation: 10,
 	},
 	innerHeader: {
 		textAlign: "center",
@@ -36,17 +43,8 @@ const modalStyles = StyleSheet.create({
 	},
 	modalView: {
 		backgroundColor: "white",
-		borderRadius: 5,
 		width: modalWidth,
 		padding: 25,
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5,
 	},
 	formField: {
 		gap: 10,
@@ -95,8 +93,8 @@ const modalStyles = StyleSheet.create({
 	},
 	button: {
 		borderRadius: 5,
-		padding: 10,
-		elevation: 2,
+		padding: 25,
+		elevation: 5,
 	},
 	buttonConfirm: {
 		backgroundColor: "#F194FF",
