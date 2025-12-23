@@ -103,7 +103,10 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 						<Pressable
 							onPress={closeModal}
 							hitSlop={10}
-							style={modalStyles.closeIcon}
+							style={({ pressed }) => [
+								modalStyles.closeIcon, // your static styles
+								{ opacity: pressed ? 0.6 : 1 }, // pressed effect
+							]}
 						>
 							<Ionicons name="close" size={26} color="#333" />
 						</Pressable>
