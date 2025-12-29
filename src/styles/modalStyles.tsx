@@ -73,6 +73,10 @@ const modalStyles = StyleSheet.create({
 		fontSize: 17,
 		fontWeight: "500",
 	},
+	subLabel: {
+		fontSize: 15,
+		fontWeight: "400",
+	},
 	buttonsWrapper: {
 		flexDirection: "row", // Arrange children horizontally
 		justifyContent: "space-between", // Add space between buttons

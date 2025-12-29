@@ -9,77 +9,80 @@ const ENCRYPTION_KEY = process.env.EXPO_PUBLIC_PIN_ENCRYPTION_KEY;
 
 // Encrypt a PIN (string)
 export function encryptPin(pin: string): string {
-  console.log(pin, ENCRYPTION_KEY);
-  const encrypted = AES.encrypt(pin, ENCRYPTION_KEY);
-  return encrypted.toString(); // returns ciphertext string (base64 by default)
+	console.log(pin, ENCRYPTION_KEY);
+	const encrypted = AES.encrypt(pin, ENCRYPTION_KEY);
+	return encrypted.toString(); // returns ciphertext string (base64 by default)
 }
 
 // Decrypt the encrypted PIN
 export function decryptPin(cipherText: string): string {
-  const decrypted = AES.decrypt(cipherText, ENCRYPTION_KEY);
-  return decrypted.toString(Utf8);
+	const decrypted = AES.decrypt(cipherText, ENCRYPTION_KEY);
+	return decrypted.toString(Utf8);
 }
 
 export function dateReviver(key: string, value: any) {
-  if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
-    // Check if the string matches the ISO 8601 date format
-    return new Date(value);
-  }
-  return value;
+	if (
+		typeof value === "string" &&
+		/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)
+	) {
+		// Check if the string matches the ISO 8601 date format
+		return new Date(value);
+	}
+	return value;
 }
 
 export function formatDate(date: Date) {
-  return `${date.getDate()}.${date.getMonth() + 1}.`;
+	return `${date.getDate()}.${date.getMonth() + 1}.`;
 }
 
 export function getAbbreviatedDayName(date: Date): string {
-  const options: Intl.DateTimeFormatOptions = { weekday: "short" };
-  const dayName = date.toLocaleDateString("en-US", options);
-  return dayName.slice(0, 3);
+	const options: Intl.DateTimeFormatOptions = { weekday: "short" };
+	const dayName = date.toLocaleDateString("en-US", options);
+	return dayName.slice(0, 3);
 }
 
 export async function registerForPushNotificationsAsync() {
-		const { status } = await Notifications.requestPermissionsAsync();
-		if (status !== "granted") {
-			alert("Permission to receive notifications was denied");
-			return;
-		}
-
-		// Optional: Get push token for remote notifications
-		// const token = (await Notifications.getExpoPushTokenAsync()).data;
-		// console.log(token);
-
-		// For Android
-		if (Platform.OS === "android") {
-			Notifications.setNotificationChannelAsync("default", {
-				name: "default",
-				importance: Notifications.AndroidImportance.HIGH,
-			});
-		}
+	const { status } = await Notifications.requestPermissionsAsync();
+	if (status !== "granted") {
+		alert("Permission to receive notifications was denied");
+		return;
 	}
 
+	// Optional: Get push token for remote notifications
+	// const token = (await Notifications.getExpoPushTokenAsync()).data;
+	// console.log(token);
+
+	// For Android
+	if (Platform.OS === "android") {
+		Notifications.setNotificationChannelAsync("default", {
+			name: "default",
+			importance: Notifications.AndroidImportance.HIGH,
+		});
+	}
+}
+
 export async function showNotification(title: string, body: string) {
-  try {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title,
-        body,
-      },
-      trigger: null,
-    });
-  } catch (error) {
-    console.error("Notification error:", error);
-  }
+	try {
+		await Notifications.scheduleNotificationAsync({
+			content: {
+				title,
+				body,
+			},
+			trigger: null,
+		});
+	} catch (error) {
+		console.error("Notification error:", error);
+	}
 }
 
 export async function scheduleNotifications() {
-  await registerForPushNotificationsAsync();
-  const settingsService = new SettingsService();
-  const settings = await settingsService.getSettings();
-  const existingNotifications =
-    await Notifications.getAllScheduledNotificationsAsync();
+	await registerForPushNotificationsAsync();
+	const settingsService = new SettingsService();
+	const settings = await settingsService.getSettings();
+	const existingNotifications =
+		await Notifications.getAllScheduledNotificationsAsync();
 
-  Notifications.setNotificationHandler({
+	Notifications.setNotificationHandler({
 		handleNotification: async () => ({
 			shouldShowBanner: true,
 			shouldShowList: true,
@@ -88,53 +91,75 @@ export async function scheduleNotifications() {
 		}),
 	});
 
-  // Avoid scheduling duplicates
-  const alreadyScheduled = existingNotifications.some((n) => {
-    const { trigger } = n;
-    if (!trigger || typeof trigger !== "object" || !("type" in trigger))
-      return false;
-    return (
-      trigger.type === SchedulableTriggerInputTypes.DAILY &&
-      trigger.hour === 20 &&
-      trigger.minute === 0
-    );
-  });
+	// Avoid scheduling duplicates
+	const alreadyScheduled = existingNotifications.some((n) => {
+		const { trigger } = n;
+		if (!trigger || typeof trigger !== "object" || !("type" in trigger))
+			return false;
+		return (
+			trigger.type === SchedulableTriggerInputTypes.DAILY &&
+			trigger.hour === 20 &&
+			trigger.minute === 0
+		);
+	});
 
-  const logScheduledNotifications = async () => {
-    const scheduled =
-      await Notifications.getAllScheduledNotificationsAsync();
-    console.log(
-      "Scheduled notifications:",
-      JSON.stringify(scheduled, null, 2)
-    );
-  };
+	const logScheduledNotifications = async () => {
+		const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+		console.log("Scheduled notifications:", JSON.stringify(scheduled, null, 2));
+	};
 
-  logScheduledNotifications();
+	logScheduledNotifications();
 
-  if (!alreadyScheduled && settings?.allowNotifications) {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Sadhana List",
-        body: "Did you add your sadhana today?",
-      },
-      trigger: {
-        type: SchedulableTriggerInputTypes.DAILY,
-        hour: 20,
-        minute: 0,
-      },
-    });
-  }
+	if (!alreadyScheduled && settings?.allowNotifications) {
+		await Notifications.scheduleNotificationAsync({
+			content: {
+				title: "Sadhana List",
+				body: "Did you add your sadhana today?",
+			},
+			trigger: {
+				type: SchedulableTriggerInputTypes.DAILY,
+				hour: 20,
+				minute: 0,
+			},
+		});
+	}
 
-  // Return updated list
-  return await Notifications.getAllScheduledNotificationsAsync();
+	// Return updated list
+	return await Notifications.getAllScheduledNotificationsAsync();
 }
 
 export async function disableNotifications() {
-  await Notifications.cancelAllScheduledNotificationsAsync();
-};
+	await Notifications.cancelAllScheduledNotificationsAsync();
+}
+
+export function getHoursAndMinutes(minutes: number) {
+	return `${Math.floor(minutes / 60)}h ${
+		minutes % 60 > 0 ? `${minutes % 60}m` : ""
+	}`;
+}
 
 export function getHHmm(minutes: number) {
-  return `${Math.floor(minutes / 60)}h ${
-    minutes % 60 > 0 ? `${minutes % 60}m` : ""
-  }`;
+	const h = String(Math.floor(minutes / 60)).padStart(2, "0");
+	const m = String(minutes % 60).padStart(2, "0");
+	return `${h}:${m}`;
+}
+
+export function getSleepDuration(bedTime: number, wakeUpTime: number) {
+	const minutes = wakeUpTime - bedTime;
+	return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:
+					${String(minutes % 60).padStart(2, "0")}`;
+}
+
+export const getDateFromMinutes = (minutes: number | null) => {
+	const date = new Date();
+	if (minutes == null) {
+		date.setHours(0);
+		date.setMinutes(0);
+	} else {
+		date.setHours(Math.floor(minutes / 60));
+		date.setMinutes(minutes % 60);
+	}
+	date.setSeconds(0);
+	date.setMilliseconds(0);
+	return date;
 };

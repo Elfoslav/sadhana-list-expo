@@ -19,7 +19,12 @@ import SadhanaData from "../models/SadhanaData";
 import User from "../models/User";
 import SadhanaManager from "../lib/SadhanaManager";
 import { useUserStore } from "../stores/useUserStore";
-import { formatDate, getAbbreviatedDayName, getHHmm } from "../lib/functions";
+import {
+	formatDate,
+	getAbbreviatedDayName,
+	getHHmm,
+	getHoursAndMinutes,
+} from "../lib/functions";
 import Button from "../components/ui/Button";
 import CheckBox from "../components/ui/CheckBox";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -161,24 +166,37 @@ const SadhanaListView: React.FC = () => {
 	const updateSadhanaList = async (sadhanaData: SadhanaData[]) => {
 		setSadhanaList(sadhanaData);
 
-		if (user) {
-			const mergedSadhanaData = sadhanaManager.mergeSadhanaList(
-				sadhanaData,
-				user
-			);
-			const updatedUser = {
-				...user,
-				sadhanaData: mergedSadhanaData,
-			};
+		if (!user) return;
 
-			setUser(updatedUser);
-			console.log(
-				"user.lastBedTime, user.lastWakeUpTime",
-				user.lastBedTime,
-				user.lastWakeUpTime
-			);
-			usersService.saveUser(updatedUser);
-		}
+		const sadhanaItem = sadhanaData[editingIndex];
+
+		const updatedUser = {
+			...user,
+			lastBedTime:
+				sadhanaItem?.bedTime && sadhanaItem.bedTime > 0
+					? sadhanaItem.bedTime
+					: user.lastBedTime,
+
+			lastWakeUpTime:
+				sadhanaItem?.wakeUpTime && sadhanaItem.wakeUpTime > 0
+					? sadhanaItem.wakeUpTime
+					: user.lastWakeUpTime,
+		};
+
+		const mergedSadhanaData = sadhanaManager.mergeSadhanaList(
+			sadhanaData,
+			updatedUser
+		);
+
+		updatedUser.sadhanaData = mergedSadhanaData;
+
+		setUser(updatedUser);
+		console.log(
+			"user.lastBedTime, user.lastWakeUpTime",
+			user.lastBedTime,
+			user.lastWakeUpTime
+		);
+		usersService.saveUser(updatedUser);
 	};
 
 	const handleCheckboxChange = (index: number, propertyName: string) => {
@@ -323,22 +341,14 @@ const SadhanaListView: React.FC = () => {
 					{sadhana.bedTime != null && sadhana.bedTime > 0 && (
 						<View style={commonStyles.flexRow}>
 							<Text style={commonStyles.textBold}>Bed time: </Text>
-							<Text>
-								{/* hh:mm */}
-								{String(Math.floor(sadhana.bedTime / 60)).padStart(2, "0")}:
-								{String(sadhana.bedTime % 60).padStart(2, "0")}
-							</Text>
+							<Text>{getHHmm(sadhana.bedTime)}</Text>
 						</View>
 					)}
 
 					{sadhana.wakeUpTime != null && sadhana.wakeUpTime > 0 && (
 						<View style={commonStyles.flexRow}>
 							<Text style={commonStyles.textBold}>Woke up: </Text>
-							<Text>
-								{/* hh:mm */}
-								{String(Math.floor(sadhana.wakeUpTime / 60)).padStart(2, "0")}:
-								{String(sadhana.wakeUpTime % 60).padStart(2, "0")}
-							</Text>
+							<Text>{getHHmm(sadhana.wakeUpTime)}</Text>
 						</View>
 					)}
 
@@ -359,14 +369,14 @@ const SadhanaListView: React.FC = () => {
 					{sadhana.reading != null && sadhana.reading > 0 && (
 						<View style={commonStyles.flexRow}>
 							<Text style={commonStyles.textBold}>Reading: </Text>
-							<Text>{getHHmm(sadhana.reading)}</Text>
+							<Text>{getHoursAndMinutes(sadhana.reading)}</Text>
 						</View>
 					)}
 
 					{sadhana.service != null && sadhana.service > 0 && (
 						<View style={commonStyles.flexRow}>
 							<Text style={commonStyles.textBold}>Service: </Text>
-							<Text>{getHHmm(sadhana.service)}</Text>
+							<Text>{getHoursAndMinutes(sadhana.service)}</Text>
 						</View>
 					)}
 				</View>

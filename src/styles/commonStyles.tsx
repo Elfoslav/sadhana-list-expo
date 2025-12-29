@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		paddingVertical: 5,
 		paddingHorizontal: 10,
-		height: 100,
+		height: 120,
 	},
 	btnLg: {
 		height: 40,

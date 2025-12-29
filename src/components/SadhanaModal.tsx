@@ -15,7 +15,7 @@ import { useUserStore } from "../stores/useUserStore";
 import React, { useEffect, useState } from "react";
 import commonStyles from "../styles/commonStyles";
 import modalStyles from "../styles/modalStyles";
-import { formatDate, getAbbreviatedDayName } from "../lib/functions";
+import { formatDate, getAbbreviatedDayName, getHHmm } from "../lib/functions";
 import TimePicker from "./TimePicker";
 import DurationPicker from "./DurationPicker";
 
@@ -37,7 +37,6 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 	closeModal,
 }) => {
 	const user = useUserStore((state) => state.user);
-	const setUser = useUserStore((state) => state.setUser);
 	const [localSadhanaData, setLocalSadhanaData] =
 		useState<SadhanaData>(sadhanaData);
 
@@ -50,17 +49,23 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 			[attrName]: value,
 		};
 
-		if (user && attrName === "bedTime" && Number(value) > 0) {
-			user.lastBedTime = Number(value);
-			setUser(user);
-		}
+		setLocalSadhanaData(newSadhanaData);
+	};
 
-		if (user && attrName === "wakeUpTime" && Number(value) > 0) {
-			user.lastWakeUpTime = Number(value);
-			setUser(user);
-		}
+	const setLastBedTime = () => {
+		const newSadhanaData = {
+			...localSadhanaData,
+			bedTime: user?.lastBedTime ?? null,
+		};
 
-		console.log("newSadhanaData", newSadhanaData);
+		setLocalSadhanaData(newSadhanaData);
+	};
+
+	const setLastWakeUpTime = () => {
+		const newSadhanaData = {
+			...localSadhanaData,
+			wakeUpTime: user?.lastWakeUpTime ?? null,
+		};
 
 		setLocalSadhanaData(newSadhanaData);
 	};
@@ -70,11 +75,6 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 		if (isVisible) {
 			setLocalSadhanaData({
 				...sadhanaData,
-				bedTime: sadhanaData.bedTime ?? user?.lastBedTime ?? null,
-				wakeUpTime:
-					sadhanaData.wakeUpTime && sadhanaData.wakeUpTime > 0
-						? sadhanaData.wakeUpTime
-						: user?.lastWakeUpTime ?? null,
 			});
 		}
 	}, [isVisible]);
@@ -114,24 +114,54 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 					<TouchableWithoutFeedback>
 						<View style={modalStyles.modalView}>
 							<View style={modalStyles.formField}>
-								<Text style={modalStyles.inputLabel}>Bed time</Text>
-								<TimePicker
-									value={localSadhanaData?.bedTime}
-									onChange={(val) => handleChange(val, "bedTime")}
-									textStyle={{ fontSize: 15 }}
-									disabled={readOnly}
-									is24Hour
-								/>
+								<View style={modalStyles.formField}>
+									<Text style={modalStyles.inputLabel}>Bed time</Text>
+									<Pressable onPress={setLastBedTime}>
+										<Text style={modalStyles.subLabel}>
+											{user?.lastBedTime != null &&
+												`(${getHHmm(user?.lastBedTime)})`}
+										</Text>
+									</Pressable>
+								</View>
+								<View style={modalStyles.formField}>
+									<TimePicker
+										value={localSadhanaData?.bedTime}
+										onChange={(val) => handleChange(val, "bedTime")}
+										showTime={false}
+										disabled={readOnly}
+										is24Hour
+									/>
+									<DurationPicker
+										value={localSadhanaData?.bedTime}
+										onChange={(minutes) => handleChange(minutes, "bedTime")}
+										disabled={readOnly}
+									/>
+								</View>
 							</View>
 							<View style={modalStyles.formField}>
-								<Text style={modalStyles.inputLabel}>Wake up time</Text>
-								<TimePicker
-									value={localSadhanaData?.wakeUpTime}
-									onChange={(val) => handleChange(val, "wakeUpTime")}
-									textStyle={{ fontSize: 15 }}
-									disabled={readOnly}
-									is24Hour
-								/>
+								<View style={modalStyles.formField}>
+									<Text style={modalStyles.inputLabel}>Wake up time</Text>
+									<Pressable onPress={setLastWakeUpTime}>
+										<Text style={modalStyles.subLabel}>
+											{user?.lastWakeUpTime &&
+												`(${getHHmm(user?.lastWakeUpTime)})`}
+										</Text>
+									</Pressable>
+								</View>
+								<View style={modalStyles.formField}>
+									<TimePicker
+										value={localSadhanaData?.wakeUpTime}
+										onChange={(val) => handleChange(val, "wakeUpTime")}
+										showTime={false}
+										disabled={readOnly}
+										is24Hour
+									/>
+									<DurationPicker
+										value={localSadhanaData?.wakeUpTime}
+										onChange={(minutes) => handleChange(minutes, "wakeUpTime")}
+										disabled={readOnly}
+									/>
+								</View>
 							</View>
 
 							<View style={modalStyles.formField}>
@@ -155,7 +185,7 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 							<View style={[modalStyles.formField, modalStyles.textareaField]}>
 								<TextInput
 									multiline
-									numberOfLines={3}
+									numberOfLines={6}
 									textAlignVertical="top"
 									style={commonStyles.textArea}
 									value={localSadhanaData?.note || ""}
