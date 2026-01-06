@@ -63,7 +63,8 @@ export function useBootstrapUser() {
 			if (
 				storeLocalUser &&
 				storeRemoteUser &&
-				trimmedUsername === storeLocalUser.username
+				trimmedUsername === storeLocalUser.username &&
+				trimmedUsername === storeRemoteUser?.username
 			) {
 				return forwardNextScreen(
 					storeLocalUser,

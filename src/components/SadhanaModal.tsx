@@ -40,10 +40,10 @@ const SadhanaModal: React.FC<SadhanaModalProps> = ({
 	const [localSadhanaData, setLocalSadhanaData] =
 		useState<SadhanaData>(sadhanaData);
 
-	console.log(sadhanaData);
+	console.log("SadhanaModal sadhanaData: ", sadhanaData);
 
 	const handleChange = (value: string | number | null, attrName: string) => {
-		console.log(localSadhanaData);
+		console.log("SadhanaModal handleChange localSadhanaData", localSadhanaData);
 		const newSadhanaData = {
 			...localSadhanaData,
 			[attrName]: value,

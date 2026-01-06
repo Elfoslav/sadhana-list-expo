@@ -54,6 +54,7 @@ const SadhanaListView: React.FC = () => {
 	const sadhanaManager = new SadhanaManager();
 	const initialDate = new Date();
 	const user = useUserStore((state) => state.user);
+	console.log("sadhana list view user: ", user?.username);
 	const setUser = useUserStore((state) => state.setUser);
 	const [isLoading, setIsLoading] = useState(true);
 	const [currentDate, setCurrentDate] = useState(initialDate);
@@ -119,8 +120,19 @@ const SadhanaListView: React.FC = () => {
 		if (readOnly) {
 			foundUser = (await usersService.getRemoteUser(username)) as User;
 		} else {
-			foundUser = user || ((await usersService.getUser(username)) as User);
+			if (!user || user.username !== username) {
+				foundUser = await usersService.getUser(username);
+			} else {
+				foundUser = user;
+			}
 		}
+
+		if (foundUser == null) {
+			console.log("generateSadhanaList foundUser is null");
+			return [];
+		}
+
+		console.log("generateSadhanaList foundUser", foundUser.username);
 
 		return Array.from({ length: numberOfDaysInMonth }, (_, i) => i + 1).map(
 			(day) => {
@@ -278,7 +290,7 @@ const SadhanaListView: React.FC = () => {
 		};
 
 		fetchData();
-	}, [currentDate]);
+	}, [currentDate, username]);
 
 	const renderItem = ({
 		item,
