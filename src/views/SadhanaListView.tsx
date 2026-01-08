@@ -28,7 +28,7 @@ import {
 import Button from "../components/ui/Button";
 import CheckBox from "../components/ui/CheckBox";
 import { MaterialIcons } from "@expo/vector-icons";
-import SadhanaModal from "../components/SadhanaModal";
+import SadhanaModal from "../components/modals/SadhanaModal";
 import commonStyles from "../styles/commonStyles";
 
 const SadhanaListView: React.FC = () => {
@@ -487,8 +487,8 @@ const SadhanaListView: React.FC = () => {
 				isVisible={isEditModalVisible}
 				readOnly={readOnly === "true"}
 				sadhanaData={sadhanaList[editingIndex]}
-				confirmModal={confirmEditModal}
-				closeModal={closeEditModal}
+				onConfirm={confirmEditModal}
+				onClose={closeEditModal}
 			/>
 		</View>
 	);

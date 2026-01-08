@@ -9,10 +9,11 @@ const modalStyles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-		paddingHorizontal: 16,
-		paddingVertical: 12,
+		paddingTop: 55,
+		paddingBottom: 40,
 		borderBottomWidth: 1,
 		borderBottomColor: "#eee",
+		backgroundColor: "white",
 	},
 	centeredView: {
 		justifyContent: "center",
@@ -20,8 +21,7 @@ const modalStyles = StyleSheet.create({
 	},
 	header: {
 		width: modalWidth,
-		top: 20,
-		padding: 10,
+		top: 40,
 		textAlign: "center",
 		marginBottom: 15,
 		zIndex: 1,
@@ -30,57 +30,31 @@ const modalStyles = StyleSheet.create({
 	},
 	closeIcon: {
 		position: "absolute",
-		top: 42,
-		right: 30,
+		top: 95,
+		right: 15,
 		zIndex: 10,
 		elevation: 10,
 	},
 	innerHeader: {
 		textAlign: "center",
-		marginBottom: 15,
 		fontSize: 18,
 		fontWeight: "bold",
 	},
 	modalView: {
 		backgroundColor: "white",
 		width: modalWidth,
+		height: "100%",
 		padding: 25,
 	},
-	formField: {
+	footer: {
+		flexDirection: "row", // Arrange children horizontally
+		justifyContent: "space-between", // Add space between buttons
 		gap: 10,
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		marginBottom: 10,
-	},
-	textareaField: {
-		marginTop: 8,
-		marginBottom: 20,
-	},
-	input: {
-		height: 32,
-		width: 40,
-		borderWidth: 1,
-		borderColor: "#ccc",
-		borderRadius: 8,
-		fontSize: 14,
-		textAlign: "center",
-		color: "#333",
-		backgroundColor: "#f9f9f9",
-		paddingBottom: 6,
-	},
-	inputLabel: {
-		fontSize: 17,
-		fontWeight: "500",
-	},
-	subLabel: {
-		fontSize: 15,
-		fontWeight: "400",
 	},
 	buttonsWrapper: {
 		flexDirection: "row", // Arrange children horizontally
 		justifyContent: "space-between", // Add space between buttons
-		gap: 10,
+		width: "100%",
 	},
 	closeButton: {
 		position: "absolute", // Overlay the button
@@ -94,31 +68,6 @@ const modalStyles = StyleSheet.create({
 		color: "white",
 		fontSize: 18,
 		fontWeight: "bold",
-	},
-	button: {
-		borderRadius: 5,
-		padding: 25,
-		elevation: 5,
-	},
-	buttonConfirm: {
-		backgroundColor: "#F194FF",
-	},
-	cancelButton: {
-		backgroundColor: "gray",
-	},
-	textStyle: {
-		color: "white",
-		fontWeight: "bold",
-	},
-	dayText: {
-		fontSize: 18,
-		fontWeight: "600",
-		color: "#666",
-	},
-	dateText: {
-		fontSize: 20,
-		fontWeight: "700",
-		color: "#555",
 	},
 });
 

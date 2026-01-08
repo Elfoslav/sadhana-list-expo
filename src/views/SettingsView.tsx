@@ -11,7 +11,7 @@ import {
 	disableNotifications,
 } from "../lib/functions";
 import SettingsService from "../services/SettingsService";
-import PinModal from "../components/PinModal";
+import PinModal from "../components/modals/PinModal";
 import { usersService } from "../services/usersServiceInstance";
 import { useUserStore } from "../stores/useUserStore";
 
