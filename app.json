@@ -3,7 +3,7 @@
     "name": "Sadhana List",
     "slug": "sadhanalist",
     "owner": "elfoslav",
-    "version": "1.21.0",
+    "version": "1.22.0",
     "orientation": "portrait",
     "icon": "./assets/iskcon-logo-icon.png",
     "scheme": "sadhanalist",
@@ -11,7 +11,7 @@
     "newArchEnabled": true,
     "android": {
       "package": "com.sadhanalist",
-      "versionCode": 44,
+      "versionCode": 45,
       "adaptiveIcon": {
         "foregroundImage": "./assets/iskcon-logo-padding-120.png",
         "backgroundColor": "#ffffff"
