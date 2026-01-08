@@ -1,4 +1,4 @@
-import { use, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAppState } from "../stores/useAppState";
 import { useUserStore } from "../stores/useUserStore";
@@ -28,29 +28,26 @@ export function useBootstrapUser() {
 		username: string,
 		manualRedirect = false
 	) => {
-		// Defer navigation to next tick
-		setTimeout(() => {
-			if (
-				(!localUser?.pin && remoteUser?.pin) ||
-				localUser?.pin !== remoteUser?.pin
-			) {
-				router.push({ pathname: "/pin-auth", params: { username } });
-			} else if (!localUser?.pin && !remoteUser?.pin) {
-				router.push({
-					pathname: "/pin-setup",
-					params: { username },
-				});
-			} else if (manualRedirect || !redirectedToSadhana) {
-				// Allow redirect if manual call or auto first-time redirect
-				setRedirectedToSadhana(true);
-				router.push({
-					pathname: "/sadhana-list",
-					params: { username },
-				});
-			}
+		if (
+			(!localUser?.pin && remoteUser?.pin) ||
+			localUser?.pin !== remoteUser?.pin
+		) {
+			router.push({ pathname: "/pin-auth", params: { username } });
+		} else if (!localUser?.pin && !remoteUser?.pin) {
+			router.push({
+				pathname: "/pin-setup",
+				params: { username },
+			});
+		} else if (manualRedirect || !redirectedToSadhana) {
+			// Allow redirect if manual call or auto first-time redirect
+			setRedirectedToSadhana(true);
+			router.push({
+				pathname: "/sadhana-list",
+				params: { username },
+			});
+		}
 
-			setIsLoading(false);
-		}, 0);
+		setIsLoading(false);
 	};
 
 	const bootstrap = useCallback(
