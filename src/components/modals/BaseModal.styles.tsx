@@ -9,7 +9,7 @@ const modalStyles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-		paddingTop: 55,
+		paddingTop: 60,
 		paddingBottom: 40,
 		borderBottomWidth: 1,
 		borderBottomColor: "#eee",
@@ -21,7 +21,7 @@ const modalStyles = StyleSheet.create({
 	},
 	header: {
 		width: modalWidth,
-		top: 40,
+		top: 45,
 		textAlign: "center",
 		marginBottom: 15,
 		zIndex: 1,
@@ -30,7 +30,7 @@ const modalStyles = StyleSheet.create({
 	},
 	closeIcon: {
 		position: "absolute",
-		top: 95,
+		top: 104,
 		right: 15,
 		zIndex: 10,
 		elevation: 10,
@@ -55,19 +55,6 @@ const modalStyles = StyleSheet.create({
 		flexDirection: "row", // Arrange children horizontally
 		justifyContent: "space-between", // Add space between buttons
 		width: "100%",
-	},
-	closeButton: {
-		position: "absolute", // Overlay the button
-		top: -20, // Adjust the top position as needed
-		right: -20, // Adjust the right position as needed
-		padding: 5, // Adjust the padding as needed
-		borderRadius: 50, // Adjust the border radius as needed
-		backgroundColor: "white",
-	},
-	closeButtonText: {
-		color: "white",
-		fontSize: 18,
-		fontWeight: "bold",
 	},
 });
 
