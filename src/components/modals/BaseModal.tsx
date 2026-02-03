@@ -7,6 +7,7 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import modalStyles from "./BaseModal.styles";
 
@@ -32,7 +33,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 				keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
 			>
-				<View style={modalStyles.centeredView}>
+				<SafeAreaView style={modalStyles.centeredView} edges={["top"]}>
 					{/* Header */}
 					<View style={modalStyles.headerBar}>
 						<View>{title}</View>
@@ -55,7 +56,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 						{/* Footer */}
 						{footer && <View style={modalStyles.footer}>{footer}</View>}
 					</View>
-				</View>
+				</SafeAreaView>
 			</KeyboardAvoidingView>
 		</Modal>
 	);
