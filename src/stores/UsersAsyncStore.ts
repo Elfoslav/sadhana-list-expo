@@ -2,10 +2,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import User from "../models/User";
 import { dateReviver } from "../lib/functions";
 
-const KEY = "other_users";
+class UsersAsyncStore {
+	constructor(private key: string) {}
 
-class OtherUsersAsyncStore {
-	// Create a new user (if username doesn't exist)
 	async createUser(newUser: User): Promise<User | null> {
 		try {
 			const allUsers = await this.getAll();
@@ -13,21 +12,20 @@ class OtherUsersAsyncStore {
 
 			if (!exists) {
 				const updatedUsers = [...allUsers, newUser];
-				await AsyncStorage.setItem(KEY, JSON.stringify(updatedUsers));
+				await AsyncStorage.setItem(this.key, JSON.stringify(updatedUsers));
 				return newUser;
 			}
 
-			return null; // user already exists
+			return null;
 		} catch (e) {
 			console.log("createUser error", e);
 			throw e;
 		}
 	}
 
-	// Get all stored users
 	async getAll(): Promise<User[]> {
 		try {
-			const data = await AsyncStorage.getItem(KEY);
+			const data = await AsyncStorage.getItem(this.key);
 			if (data) {
 				return JSON.parse(data, dateReviver) as User[];
 			}
@@ -38,31 +36,28 @@ class OtherUsersAsyncStore {
 		}
 	}
 
-	// Get a specific user by username
 	async getUser(username: string): Promise<User | null> {
 		try {
 			const allUsers = await this.getAll();
-			const user = allUsers.find((u) => u.username === username);
-			return user || null;
+			return allUsers.find((u) => u.username === username) || null;
 		} catch (e) {
 			console.log("getUser error", e);
 			throw e;
 		}
 	}
 
-	// Save/update a user
 	async saveUser(user: User): Promise<void> {
 		try {
 			const allUsers = await this.getAll();
 			const index = allUsers.findIndex((u) => u.username === user.username);
 
 			if (index >= 0) {
-				allUsers[index] = user; // update existing
+				allUsers[index] = user;
 			} else {
-				allUsers.push(user); // add new
+				allUsers.push(user);
 			}
 
-			await AsyncStorage.setItem(KEY, JSON.stringify(allUsers));
+			await AsyncStorage.setItem(this.key, JSON.stringify(allUsers));
 		} catch (e) {
 			console.log("saveUser error", e);
 			throw e;
@@ -71,19 +66,18 @@ class OtherUsersAsyncStore {
 
 	async saveUsers(users: User[]): Promise<void> {
 		try {
-			await AsyncStorage.setItem(KEY, JSON.stringify(users));
+			await AsyncStorage.setItem(this.key, JSON.stringify(users));
 		} catch (e) {
-			console.log("createUser error", e);
+			console.log("saveUsers error", e);
 			throw e;
 		}
 	}
 
-	// Optional: delete a user
 	async deleteUser(username: string): Promise<void> {
 		try {
 			const allUsers = await this.getAll();
 			const updatedUsers = allUsers.filter((u) => u.username !== username);
-			await AsyncStorage.setItem(KEY, JSON.stringify(updatedUsers));
+			await AsyncStorage.setItem(this.key, JSON.stringify(updatedUsers));
 		} catch (e) {
 			console.log("deleteUser error", e);
 			throw e;
@@ -91,4 +85,4 @@ class OtherUsersAsyncStore {
 	}
 }
 
-export default new OtherUsersAsyncStore();
+export default UsersAsyncStore;

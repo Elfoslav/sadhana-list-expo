@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import User from "../models/User";
 import { dateReviver } from "../lib/functions";
 
+// Store single user
 const USERNAME = "username";
 
 class UserAsyncStore {

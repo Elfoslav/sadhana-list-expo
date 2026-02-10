@@ -1,23 +1,18 @@
 import React, { useState, useCallback } from "react";
 import { useRouter, useFocusEffect } from "expo-router";
-import {
-	View,
-	StyleSheet,
-	StatusBar,
-	useColorScheme,
-	Image,
-	Alert,
-	Text,
-} from "react-native";
+import { View, StyleSheet, StatusBar, useColorScheme, Image, Alert, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import commonStyles from "../styles/commonStyles";
 import { usersService } from "../services/usersServiceInstance";
 import Button from "../components/ui/Button";
 import UserSearchSelect from "../components/UserSearchSelect";
-import OtherUsersAsyncStore from "../stores/OtherUsersAsyncStore";
+import OtherUsersStore from "../stores/OtherUsersStore";
 import User from "../models/User";
 import DraggableList from "../components/DraggableList";
 import { Colors } from "../lib/colors";
+import { useDeleteUser } from "../hooks/useDeleteUser";
+import { redirectToUserSadhana } from "../lib/functions";
+import UsersList from "../components/UsersList";
 
 function OtherUsersView() {
 	const insets = useSafeAreaInsets();
@@ -34,39 +29,23 @@ function OtherUsersView() {
 		useCallback(() => {
 			// Reload users whenever screen is focused
 			loadStoredUsers();
-		}, [])
+		}, []),
 	);
 
 	const loadStoredUsers = async () => {
-		const storedUsers = await OtherUsersAsyncStore.getAll();
+		const storedUsers = await OtherUsersStore.getAll();
 		setUsers(storedUsers);
 	};
 
-	const onDeleteUser = async (user: User) => {
-		Alert.alert(
-			"Delete User",
-			`Are you sure you want to delete ${user.username}?`,
-			[
-				{
-					text: "Cancel",
-					style: "cancel",
-				},
-				{
-					text: "Delete",
-					style: "destructive",
-					onPress: async () => {
-						await OtherUsersAsyncStore.deleteUser(user.username);
-						setUsers(await OtherUsersAsyncStore.getAll());
-					},
-				},
-			],
-			{ cancelable: true }
-		);
+	const reloadUsers = async () => {
+		setUsers(await OtherUsersStore.getAll());
 	};
+
+	const deleteUser = useDeleteUser(OtherUsersStore, reloadUsers);
 
 	const onDragEnd = async (users: User[]) => {
 		console.log(users);
-		await OtherUsersAsyncStore.saveUsers(users);
+		await OtherUsersStore.saveUsers(users);
 	};
 
 	const checkUserData = async () => {
@@ -85,27 +64,17 @@ function OtherUsersView() {
 		return true;
 	};
 
-	const redirectToUserSadhana = (username: string) => {
-		router.push({
-			pathname: "/sadhana-list",
-			params: { username, readOnly: "true" },
-		});
-	};
-
 	const goToSadhanaList = async () => {
 		if (!username) {
-			Alert.alert(
-				"Fill in username!",
-				"Please enter your username before proceeding."
-			);
+			Alert.alert("Fill in username!", "Please enter your username before proceeding.");
 			return;
 		}
 
 		const checkOk = await checkUserData();
 
 		if (checkOk) {
-			OtherUsersAsyncStore.createUser({ username, sadhanaData: [] });
-			redirectToUserSadhana(username);
+			OtherUsersStore.createUser({ username, sadhanaData: [] });
+			redirectToUserSadhana(username, true);
 		}
 	};
 
@@ -124,11 +93,7 @@ function OtherUsersView() {
 
 	return (
 		<View
-			style={[
-				commonStyles.container,
-				backgroundStyle,
-				{ paddingTop: insets.top, height: "100%" },
-			]}
+			style={[commonStyles.container, backgroundStyle, { paddingTop: insets.top, height: "100%" }]}
 		>
 			<StatusBar
 				barStyle={isDarkMode ? "light-content" : "dark-content"}
@@ -136,10 +101,7 @@ function OtherUsersView() {
 			/>
 			<View>
 				<Text style={commonStyles.heading}>Sadhana of others</Text>
-				<Image
-					style={styles.logo}
-					source={require("../../assets/iskcon-logo.png")}
-				/>
+				<Image style={styles.logo} source={require("../../assets/iskcon-logo.png")} />
 			</View>
 
 			<UserSearchSelect
@@ -154,18 +116,15 @@ function OtherUsersView() {
 				title={getSadhanaButtonText()}
 				size="lg"
 				style={{ marginTop: 15 }}
+				disabled={!username || isLoading}
 			/>
 
-			{users.length > 0 && (
-				<DraggableList
-					users={users}
-					onSelectUser={(user) => redirectToUserSadhana(user.username)}
-					onDeleteUser={onDeleteUser}
-					onDragEnd={onDragEnd}
-					variant="inline"
-					style={{ marginTop: 20 }}
-				/>
-			)}
+			<UsersList
+				users={users}
+				onSelectUser={(user) => redirectToUserSadhana(user.username, true)}
+				onDeleteUser={deleteUser}
+				onDragEnd={onDragEnd}
+			/>
 		</View>
 	);
 }

@@ -1,30 +1,12 @@
-import React, {
-	useEffect,
-	useLayoutEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import {
-	View,
-	Text,
-	StyleSheet,
-	ActivityIndicator,
-	TextInput,
-	FlatList,
-} from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, TextInput, FlatList } from "react-native";
 import UsersService from "../services/UsersService";
 import SadhanaData from "../models/SadhanaData";
 import User from "../models/User";
 import SadhanaManager from "../lib/SadhanaManager";
 import { useUserStore } from "../stores/useUserStore";
-import {
-	formatDate,
-	getAbbreviatedDayName,
-	getHHmm,
-	getHoursAndMinutes,
-} from "../lib/functions";
+import { formatDate, getAbbreviatedDayName, getHHmm, getHoursAndMinutes } from "../lib/functions";
 import Button from "../components/ui/Button";
 import CheckBox from "../components/ui/CheckBox";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -37,6 +19,7 @@ const SadhanaListView: React.FC = () => {
 		readOnly: string;
 	};
 
+	const isReadOnly = readOnly === "true";
 	const navigation = useNavigation();
 
 	useLayoutEffect(() => {
@@ -65,29 +48,14 @@ const SadhanaListView: React.FC = () => {
 
 	let { mangalaSum, guruPujaSum, gauraAratiSum, japaSum } = useMemo(() => {
 		return {
-			mangalaSum: sadhanaList.reduce(
-				(sum, item) => sum + (item.mangala ? 1 : 0),
-				0
-			),
-			guruPujaSum: sadhanaList.reduce(
-				(sum, item) => sum + (item.guruPuja ? 1 : 0),
-				0
-			),
-			gauraAratiSum: sadhanaList.reduce(
-				(sum, item) => sum + (item.gauraArati ? 1 : 0),
-				0
-			),
-			japaSum: sadhanaList.reduce(
-				(sum, item) => sum + (item.japaRounds ?? 0),
-				0
-			),
+			mangalaSum: sadhanaList.reduce((sum, item) => sum + (item.mangala ? 1 : 0), 0),
+			guruPujaSum: sadhanaList.reduce((sum, item) => sum + (item.guruPuja ? 1 : 0), 0),
+			gauraAratiSum: sadhanaList.reduce((sum, item) => sum + (item.gauraArati ? 1 : 0), 0),
+			japaSum: sadhanaList.reduce((sum, item) => sum + (item.japaRounds ?? 0), 0),
 		};
 	}, [sadhanaList]);
 
-	const getSleepDuration = (
-		bedTime: number | null,
-		wakeUpTime: number | null
-	): string | null => {
+	const getSleepDuration = (bedTime: number | null, wakeUpTime: number | null): string | null => {
 		if (bedTime == null || wakeUpTime == null) return null;
 
 		const MINUTES_IN_DAY = 24 * 60;
@@ -103,21 +71,14 @@ const SadhanaListView: React.FC = () => {
 		return `${hours}:${String(minutes).padStart(2, "0")}`;
 	};
 
-	async function generateSadhanaList(
-		date: Date,
-		username: string
-	): Promise<SadhanaData[]> {
+	async function generateSadhanaList(date: Date, username: string): Promise<SadhanaData[]> {
 		console.log("generate sadhanaList", username);
 		const currentYear = date.getFullYear();
 		const currentMonth = date.getMonth();
-		const numberOfDaysInMonth = new Date(
-			currentYear,
-			currentMonth + 1,
-			0
-		).getDate();
+		const numberOfDaysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
 		let foundUser;
-		if (readOnly) {
+		if (isReadOnly) {
 			foundUser = (await usersService.getRemoteUser(username)) as User;
 		} else {
 			if (!user || user.username !== username) {
@@ -134,31 +95,26 @@ const SadhanaListView: React.FC = () => {
 
 		console.log("generateSadhanaList foundUser", foundUser.username);
 
-		return Array.from({ length: numberOfDaysInMonth }, (_, i) => i + 1).map(
-			(day) => {
-				// Create a Date object for the current day in the loop
-				const currentDate = new Date(currentYear, currentMonth, day);
+		return Array.from({ length: numberOfDaysInMonth }, (_, i) => i + 1).map((day) => {
+			// Create a Date object for the current day in the loop
+			const currentDate = new Date(currentYear, currentMonth, day);
 
-				// Find the matching sadhanaItem in user.sadhanaData based on day, month, and year
-				const sadhanaItem = sadhanaManager.findSadhanaItemByDate(
-					foundUser.sadhanaData,
-					currentDate
-				);
+			// Find the matching sadhanaItem in user.sadhanaData based on day, month, and year
+			const sadhanaItem = sadhanaManager.findSadhanaItemByDate(foundUser.sadhanaData, currentDate);
 
-				return {
-					date: currentDate,
-					mangala: sadhanaItem ? sadhanaItem.mangala : false,
-					guruPuja: sadhanaItem ? sadhanaItem.guruPuja : false,
-					gauraArati: sadhanaItem ? sadhanaItem.gauraArati : false,
-					japaRounds: sadhanaItem ? sadhanaItem.japaRounds : 0,
-					bedTime: sadhanaItem ? sadhanaItem.bedTime : null,
-					wakeUpTime: sadhanaItem ? sadhanaItem.wakeUpTime : null,
-					reading: sadhanaItem ? sadhanaItem.reading : 0,
-					service: sadhanaItem ? sadhanaItem.service : 0,
-					note: sadhanaItem ? sadhanaItem.note : "",
-				};
-			}
-		);
+			return {
+				date: currentDate,
+				mangala: sadhanaItem ? sadhanaItem.mangala : false,
+				guruPuja: sadhanaItem ? sadhanaItem.guruPuja : false,
+				gauraArati: sadhanaItem ? sadhanaItem.gauraArati : false,
+				japaRounds: sadhanaItem ? sadhanaItem.japaRounds : 0,
+				bedTime: sadhanaItem ? sadhanaItem.bedTime : null,
+				wakeUpTime: sadhanaItem ? sadhanaItem.wakeUpTime : null,
+				reading: sadhanaItem ? sadhanaItem.reading : 0,
+				service: sadhanaItem ? sadhanaItem.service : 0,
+				note: sadhanaItem ? sadhanaItem.note : "",
+			};
+		});
 	}
 
 	// Function to handle switching to the previous month
@@ -185,9 +141,7 @@ const SadhanaListView: React.FC = () => {
 		const updatedUser = {
 			...user,
 			lastBedTime:
-				sadhanaItem?.bedTime && sadhanaItem.bedTime > 0
-					? sadhanaItem.bedTime
-					: user.lastBedTime,
+				sadhanaItem?.bedTime && sadhanaItem.bedTime > 0 ? sadhanaItem.bedTime : user.lastBedTime,
 
 			lastWakeUpTime:
 				sadhanaItem?.wakeUpTime && sadhanaItem.wakeUpTime > 0
@@ -195,26 +149,18 @@ const SadhanaListView: React.FC = () => {
 					: user.lastWakeUpTime,
 		};
 
-		const mergedSadhanaData = sadhanaManager.mergeSadhanaList(
-			sadhanaData,
-			updatedUser
-		);
+		const mergedSadhanaData = sadhanaManager.mergeSadhanaList(sadhanaData, updatedUser);
 
 		updatedUser.sadhanaData = mergedSadhanaData;
 
 		setUser(updatedUser);
-		console.log(
-			"user.lastBedTime, user.lastWakeUpTime",
-			user.lastBedTime,
-			user.lastWakeUpTime
-		);
+		console.log("user.lastBedTime, user.lastWakeUpTime", user.lastBedTime, user.lastWakeUpTime);
 		usersService.saveUser(updatedUser);
 	};
 
 	const handleCheckboxChange = (index: number, propertyName: string) => {
 		const updatedSadhanaList = [...sadhanaList];
-		updatedSadhanaList[index][propertyName] =
-			!updatedSadhanaList[index][propertyName];
+		updatedSadhanaList[index][propertyName] = !updatedSadhanaList[index][propertyName];
 		updateSadhanaList(updatedSadhanaList);
 	};
 
@@ -252,15 +198,10 @@ const SadhanaListView: React.FC = () => {
 	};
 
 	const isSameDay = (date1: Date, date2: Date) => {
-		return (
-			date1.getDate() === date2.getDate() &&
-			date1.getMonth() === date2.getMonth()
-		);
+		return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth();
 	};
 
-	const todayIndex = sadhanaList.findIndex((sadhana) =>
-		isSameDay(sadhana.date, new Date())
-	);
+	const todayIndex = sadhanaList.findIndex((sadhana) => isSameDay(sadhana.date, new Date()));
 
 	// Scroll to today's item after mounting
 	useEffect(() => {
@@ -292,13 +233,7 @@ const SadhanaListView: React.FC = () => {
 		fetchData();
 	}, [currentDate, username]);
 
-	const renderItem = ({
-		item,
-		index,
-	}: {
-		item: SadhanaData;
-		index: number;
-	}) => {
+	const renderItem = ({ item, index }: { item: SadhanaData; index: number }) => {
 		const sadhana = item;
 		const isToday = isSameDay(sadhana.date, new Date());
 
@@ -313,21 +248,21 @@ const SadhanaListView: React.FC = () => {
 					<View style={styles.mangalaCheckboxContainer}>
 						<CheckBox
 							value={sadhana.mangala}
-							editable={!readOnly}
+							editable={!isReadOnly}
 							onChange={() => handleCheckboxChange(index, "mangala")}
 						/>
 					</View>
 					<View style={styles.guruPujaCheckboxContainer}>
 						<CheckBox
 							value={sadhana.guruPuja}
-							editable={!readOnly}
+							editable={!isReadOnly}
 							onChange={() => handleCheckboxChange(index, "guruPuja")}
 						/>
 					</View>
 					<View style={styles.gauraAratiCheckboxContainer}>
 						<CheckBox
 							value={sadhana.gauraArati}
-							editable={!readOnly}
+							editable={!isReadOnly}
 							onChange={() => handleCheckboxChange(index, "gauraArati")}
 						/>
 					</View>
@@ -338,13 +273,9 @@ const SadhanaListView: React.FC = () => {
 						maxLength={2}
 						value={sadhana.japaRounds ? sadhana.japaRounds.toString() : ""}
 						onChangeText={(value) => handleJapaRoundsChange(index, value)}
-						editable={!readOnly}
+						editable={!isReadOnly}
 					/>
-					<Button
-						variant="clear"
-						onPress={() => openEditModal(index)}
-						style={styles.editBtn}
-					>
+					<Button variant="clear" onPress={() => openEditModal(index)} style={styles.editBtn}>
 						<MaterialIcons name="edit" color="gray" size={22} />
 					</Button>
 				</View>
@@ -370,9 +301,7 @@ const SadhanaListView: React.FC = () => {
 						sadhana.wakeUpTime > 0 && (
 							<View style={commonStyles.flexRow}>
 								<Text style={commonStyles.textBold}>Sleep: </Text>
-								<Text>
-									{getSleepDuration(sadhana.bedTime, sadhana.wakeUpTime)}
-								</Text>
+								<Text>{getSleepDuration(sadhana.bedTime, sadhana.wakeUpTime)}</Text>
 							</View>
 						)}
 				</View>
@@ -412,8 +341,7 @@ const SadhanaListView: React.FC = () => {
 						<Text style={styles.navIcon}>&#8249;</Text>
 					</Button>
 					<Text style={styles.currentMonth}>
-						{currentDate.toLocaleString("default", { month: "long" })}{" "}
-						{currentDate.getFullYear()}
+						{currentDate.toLocaleString("default", { month: "long" })} {currentDate.getFullYear()}
 					</Text>
 					<Button variant="clear" onPress={switchToNextMonth}>
 						<Text style={styles.navIcon}>&#8250;</Text>
@@ -485,7 +413,7 @@ const SadhanaListView: React.FC = () => {
 
 			<SadhanaModal
 				isVisible={isEditModalVisible}
-				readOnly={readOnly === "true"}
+				readOnly={isReadOnly}
 				sadhanaData={sadhanaList[editingIndex]}
 				onConfirm={confirmEditModal}
 				onClose={closeEditModal}

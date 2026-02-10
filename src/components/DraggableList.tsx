@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-	View,
-	Text,
-	StyleSheet,
-	TouchableOpacity,
-	ViewStyle,
-} from "react-native";
-import DraggableFlatList, {
-	RenderItemParams,
-} from "react-native-draggable-flatlist";
+import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
 import User from "../models/User";
 
 type Props = {
@@ -46,22 +38,17 @@ export default function DraggableList({
 	};
 
 	const renderItem = ({ item, drag, isActive }: RenderItemParams<User>) => (
-		<View
-			style={[styles.itemContainer, isActive && { backgroundColor: "#eee" }]}
-		>
-			<TouchableOpacity
-				style={styles.itemTextContainer}
-				onPress={() => onSelectUser(item)}
-				onLongPress={variant === "inline" ? drag : undefined} // only drag in inline
-			>
+		<View style={[styles.itemContainer, isActive && { backgroundColor: "#eee" }]}>
+			<TouchableOpacity style={styles.itemTextContainer} onPress={() => onSelectUser(item)}>
 				<Text style={styles.dropdownItemText}>{item.username}</Text>
 			</TouchableOpacity>
 
+			<TouchableOpacity onPressIn={drag} style={styles.dragHandle}>
+				<Text style={styles.dragIcon}>☰</Text>
+			</TouchableOpacity>
+
 			{variant === "inline" && onDeleteUser && (
-				<TouchableOpacity
-					style={styles.deleteButton}
-					onPress={() => onDeleteUser(item)}
-				>
+				<TouchableOpacity style={styles.deleteButton} onPress={() => onDeleteUser(item)}>
 					<Text style={styles.deleteButtonText}>❌</Text>
 				</TouchableOpacity>
 			)}
@@ -78,14 +65,13 @@ export default function DraggableList({
 			scrollEnabled={true}
 			autoscrollThreshold={50} // distance from edge to start autoscroll
 			autoscrollSpeed={50}
+			contentContainerStyle={{ paddingBottom: 0 }}
 		/>
 	);
 }
 
 const styles = StyleSheet.create({
 	dropdown: {
-		position: "absolute",
-		top: 15,
 		left: 0,
 		right: 0,
 		maxHeight: 203,
@@ -93,13 +79,9 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 4,
 		backgroundColor: "#fff",
-		zIndex: 1000,
-		overflow: "scroll",
 		elevation: 10,
 	},
 	inline: {
-		flexGrow: 0,
-		marginTop: 8,
 		borderColor: "#aaa",
 		borderWidth: 1,
 		borderRadius: 4,
@@ -121,6 +103,15 @@ const styles = StyleSheet.create({
 	},
 	dropdownItemText: {
 		fontSize: 16,
+	},
+	dragHandle: {
+		paddingHorizontal: 2,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	dragIcon: {
+		fontSize: 20,
 	},
 	deleteButton: {
 		marginLeft: 10,

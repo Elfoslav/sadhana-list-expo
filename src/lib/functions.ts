@@ -1,4 +1,5 @@
 import { Platform } from "react-native";
+import { router } from "expo-router";
 import * as Notifications from "expo-notifications";
 import { SchedulableTriggerInputTypes } from "expo-notifications";
 import SettingsService from "../../src/services/SettingsService";
@@ -21,10 +22,7 @@ export function decryptPin(cipherText: string): string {
 }
 
 export function dateReviver(key: string, value: any) {
-	if (
-		typeof value === "string" &&
-		/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)
-	) {
+	if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
 		// Check if the string matches the ISO 8601 date format
 		return new Date(value);
 	}
@@ -79,8 +77,7 @@ export async function scheduleNotifications() {
 	await registerForPushNotificationsAsync();
 	const settingsService = new SettingsService();
 	const settings = await settingsService.getSettings();
-	const existingNotifications =
-		await Notifications.getAllScheduledNotificationsAsync();
+	const existingNotifications = await Notifications.getAllScheduledNotificationsAsync();
 
 	Notifications.setNotificationHandler({
 		handleNotification: async () => ({
@@ -94,8 +91,7 @@ export async function scheduleNotifications() {
 	// Avoid scheduling duplicates
 	const alreadyScheduled = existingNotifications.some((n) => {
 		const { trigger } = n;
-		if (!trigger || typeof trigger !== "object" || !("type" in trigger))
-			return false;
+		if (!trigger || typeof trigger !== "object" || !("type" in trigger)) return false;
 		return (
 			trigger.type === SchedulableTriggerInputTypes.DAILY &&
 			trigger.hour === 20 &&
@@ -133,9 +129,7 @@ export async function disableNotifications() {
 }
 
 export function getHoursAndMinutes(minutes: number) {
-	return `${Math.floor(minutes / 60)}h ${
-		minutes % 60 > 0 ? `${minutes % 60}m` : ""
-	}`;
+	return `${Math.floor(minutes / 60)}h ${minutes % 60 > 0 ? `${minutes % 60}m` : ""}`;
 }
 
 export function getHHmm(minutes: number) {
@@ -162,4 +156,15 @@ export const getDateFromMinutes = (minutes: number | null) => {
 	date.setSeconds(0);
 	date.setMilliseconds(0);
 	return date;
+};
+
+export const redirectToUserSadhana = (username: string, readOnly?: boolean) => {
+	console.log('readOnly ? "true" : "false"', readOnly ? "true" : "false");
+	router.push({
+		pathname: "/sadhana-list",
+		params: {
+			username,
+			readOnly: readOnly ? "true" : "false",
+		},
+	});
 };

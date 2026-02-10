@@ -1,12 +1,5 @@
 import React from "react";
-import {
-	Modal,
-	View,
-	ScrollView,
-	Pressable,
-	KeyboardAvoidingView,
-	Platform,
-} from "react-native";
+import { Modal, View, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import modalStyles from "./BaseModal.styles";
@@ -19,13 +12,7 @@ interface BaseModalProps {
 	footer?: React.ReactNode;
 }
 
-const BaseModal: React.FC<BaseModalProps> = ({
-	isVisible,
-	title,
-	onClose,
-	children,
-	footer,
-}) => {
+const BaseModal: React.FC<BaseModalProps> = ({ isVisible, title, onClose, children, footer }) => {
 	return (
 		<Modal visible={isVisible} animationType="slide" transparent>
 			<KeyboardAvoidingView
@@ -40,10 +27,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 						<Pressable
 							onPress={onClose}
 							hitSlop={10}
-							style={({ pressed }) => [
-								modalStyles.closeIcon,
-								{ opacity: pressed ? 0.6 : 1 },
-							]}
+							style={({ pressed }) => [modalStyles.closeIcon, { opacity: pressed ? 0.6 : 1 }]}
 						>
 							<Ionicons name="close" size={26} color="#333" />
 						</Pressable>
