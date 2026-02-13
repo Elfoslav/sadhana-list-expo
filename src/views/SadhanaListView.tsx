@@ -25,7 +25,6 @@ import commonStyles from "../styles/commonStyles";
 const SadhanaListView: React.FC = () => {
 	const { username, readOnly } = useLocalSearchParams() as {
 		username: string;
-		sadhanaData: string;
 		readOnly: string;
 	};
 
@@ -339,7 +338,7 @@ const SadhanaListView: React.FC = () => {
 
 				{sadhana.note && (
 					<View style={styles.note}>
-						<Text>{shortenString(sadhana.note, 50)}</Text>
+						<Text style={{ fontStyle: "italic" }}>{shortenString(sadhana.note, 50)}</Text>
 					</View>
 				)}
 			</View>
