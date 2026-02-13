@@ -1,52 +1,52 @@
 {
-  "expo": {
-    "name": "Sadhana List",
-    "slug": "sadhanalist",
-    "owner": "elfoslav",
-    "version": "1.22.0",
-    "orientation": "portrait",
-    "icon": "./assets/iskcon-logo-icon.png",
-    "scheme": "sadhanalist",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "android": {
-      "package": "com.sadhanalist",
-      "versionCode": 45,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/iskcon-logo-padding-120.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/iskcon-logo-96x96.png",
-          "color": "#ffffff",
-          "defaultChannel": "default",
-          "enableBackgroundRemoteNotifications": false
-        }
-      ]
-    ],
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "c64a8d0e-7989-4cdc-8453-958c542c3b3d"
-      },
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/d2473c22-2faf-4e37-801d-210ed75e900c"
-    },
-    "ios": {
-      "bundleIdentifier": "com.sadhanalist"
-    }
-  }
+	"expo": {
+		"name": "Sadhana List",
+		"slug": "sadhanalist",
+		"owner": "elfoslav",
+		"version": "1.23.0",
+		"orientation": "portrait",
+		"icon": "./assets/iskcon-logo-icon.png",
+		"scheme": "sadhanalist",
+		"userInterfaceStyle": "light",
+		"newArchEnabled": true,
+		"android": {
+			"package": "com.sadhanalist",
+			"versionCode": 46,
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/iskcon-logo-padding-120.png",
+				"backgroundColor": "#ffffff"
+			},
+			"edgeToEdgeEnabled": true
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"plugins": [
+			"expo-router",
+			[
+				"expo-notifications",
+				{
+					"icon": "./assets/iskcon-logo-96x96.png",
+					"color": "#ffffff",
+					"defaultChannel": "default",
+					"enableBackgroundRemoteNotifications": false
+				}
+			]
+		],
+		"extra": {
+			"router": {},
+			"eas": {
+				"projectId": "c64a8d0e-7989-4cdc-8453-958c542c3b3d"
+			}
+		},
+		"runtimeVersion": {
+			"policy": "appVersion"
+		},
+		"updates": {
+			"url": "https://u.expo.dev/d2473c22-2faf-4e37-801d-210ed75e900c"
+		},
+		"ios": {
+			"bundleIdentifier": "com.sadhanalist"
+		}
+	}
 }
