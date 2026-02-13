@@ -66,8 +66,8 @@ function HomeView() {
 	};
 
 	const onSelectUser = (user: User) => {
-		redirectToUserSadhana(user.username);
 		setUsername(user.username);
+		bootstrap(user.username, true);
 	};
 
 	const deleteUser = useDeleteUser(UsersStore, reloadUsers);

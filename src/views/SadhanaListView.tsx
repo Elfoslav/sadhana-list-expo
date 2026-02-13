@@ -1,6 +1,15 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { View, Text, StyleSheet, ActivityIndicator, TextInput, FlatList } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	ActivityIndicator,
+	TextInput,
+	KeyboardAvoidingView,
+	Platform,
+} from "react-native";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import UsersService from "../services/UsersService";
 import SadhanaData from "../models/SadhanaData";
 import User from "../models/User";
@@ -16,6 +25,7 @@ import commonStyles from "../styles/commonStyles";
 const SadhanaListView: React.FC = () => {
 	const { username, readOnly } = useLocalSearchParams() as {
 		username: string;
+		sadhanaData: string;
 		readOnly: string;
 	};
 
@@ -32,12 +42,13 @@ const SadhanaListView: React.FC = () => {
 		return <Text>No username provided</Text>;
 	}
 
-	const listRef = useRef<FlatList>(null);
+	const listRef = useRef<KeyboardAwareFlatList>(null);
 	const usersService = new UsersService();
 	const sadhanaManager = new SadhanaManager();
 	const initialDate = new Date();
 	const user = useUserStore((state) => state.user);
 	console.log("sadhana list view user: ", user?.username);
+	setTimeout(() => console.log("sadhana list view user: ", user?.username), 3000);
 	const setUser = useUserStore((state) => state.setUser);
 	const [isLoading, setIsLoading] = useState(true);
 	const [currentDate, setCurrentDate] = useState(initialDate);
@@ -45,6 +56,10 @@ const SadhanaListView: React.FC = () => {
 	const [sadhanaList, setSadhanaList] = useState<SadhanaData[]>([]);
 	const [isEditModalVisible, setEditModalVisible] = useState(false);
 	const [editingIndex, setEditingIndex] = useState(-1);
+
+	if (username !== user?.username) {
+		console.debug("username !== user?.username", username, user?.username);
+	}
 
 	let { mangalaSum, guruPujaSum, gauraAratiSum, japaSum } = useMemo(() => {
 		return {
@@ -201,16 +216,16 @@ const SadhanaListView: React.FC = () => {
 		return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth();
 	};
 
+	const ROW_HEIGHT = 58;
 	const todayIndex = sadhanaList.findIndex((sadhana) => isSameDay(sadhana.date, new Date()));
+	const y = todayIndex >= 0 ? todayIndex * ROW_HEIGHT : 0;
 
 	// Scroll to today's item after mounting
 	useEffect(() => {
-		if (todayIndex >= 0) {
-			setTimeout(() => {
-				listRef.current?.scrollToIndex({ index: todayIndex, animated: true });
-			}, 100); // delay ensures FlatList is rendered
-		}
-	}, [todayIndex]);
+		setTimeout(() => {
+			listRef.current?.scrollToPosition(0, y);
+		}, 100); // delay ensures FlatList is rendered
+	}, [todayIndex, y]);
 
 	const shortenString = (text: string, num: number) => {
 		const shortenedText = text.slice(0, num);
@@ -231,7 +246,7 @@ const SadhanaListView: React.FC = () => {
 		};
 
 		fetchData();
-	}, [currentDate, username]);
+	}, [currentDate, username, user]);
 
 	const renderItem = ({ item, index }: { item: SadhanaData; index: number }) => {
 		const sadhana = item;
@@ -367,22 +382,25 @@ const SadhanaListView: React.FC = () => {
 					/>
 				)}
 
-				<FlatList
-					ref={listRef}
-					data={sadhanaList}
-					renderItem={renderItem}
-					keyExtractor={(item) => item.date.toString()}
-					initialNumToRender={sadhanaList.length}
-					removeClippedSubviews={false}
-					keyboardShouldPersistTaps="handled"
-					keyboardDismissMode="on-drag"
-					onScrollToIndexFailed={({ index, averageItemLength }) => {
-						listRef.current?.scrollToOffset({
-							offset: averageItemLength * index,
-							animated: true,
-						});
-					}}
-				/>
+				<KeyboardAvoidingView
+					style={{ flex: 1 }}
+					behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS needs padding, Android height
+				>
+					<KeyboardAwareFlatList
+						ref={listRef}
+						data={sadhanaList}
+						renderItem={renderItem}
+						keyExtractor={(item) => item.date.toString()}
+						initialNumToRender={sadhanaList.length}
+						removeClippedSubviews={false}
+						keyboardShouldPersistTaps="handled"
+						keyboardDismissMode="on-drag"
+						// contentContainerStyle={{ paddingBottom: 200 }}
+						onScrollToIndexFailed={({ index, averageItemLength }) => {
+							listRef.current?.scrollToPosition(0, averageItemLength * index);
+						}}
+					/>
+				</KeyboardAvoidingView>
 
 				<View style={[styles.row, styles.footer]}>
 					<View style={styles.flexRow}>

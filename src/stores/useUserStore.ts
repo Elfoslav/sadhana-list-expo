@@ -11,6 +11,7 @@ interface UserStore {
 	setRemoteUser: (user: User) => void;
 	updateUser: (updatedFields: Partial<User>) => void;
 	clearUser: () => void;
+	clearStore: () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -25,4 +26,10 @@ export const useUserStore = create<UserStore>((set) => ({
 			user: state.user ? { ...state.user, ...updatedFields } : null,
 		})),
 	clearUser: () => set({ user: null }),
+	clearStore: () =>
+		set({
+			user: null,
+			localUser: null,
+			remoteUser: null,
+		}),
 }));

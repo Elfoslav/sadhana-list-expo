@@ -11,9 +11,7 @@ export function useBootstrapUser() {
 	const settingsService = new SettingsService();
 	const setUser = useUserStore((state) => state.setUser);
 	const setRemoteUser = useUserStore((state) => state.setRemoteUser);
-	const storeRemoteUser = useUserStore((state) => state.remoteUser);
 	const setLocalUser = useUserStore((state) => state.setLocalUser);
-	const storeLocalUser = useUserStore((state) => state.localUser);
 	const { redirectedToSadhana, setRedirectedToSadhana } = useAppState();
 	const [isLoading, setIsLoading] = useState(false);
 	const hasMounted = useRef(false);
@@ -26,12 +24,9 @@ export function useBootstrapUser() {
 		localUser: User | null,
 		remoteUser: User | null,
 		username: string,
-		manualRedirect = false
+		manualRedirect = false,
 	) => {
-		if (
-			(!localUser?.pin && remoteUser?.pin) ||
-			localUser?.pin !== remoteUser?.pin
-		) {
+		if ((!localUser?.pin && remoteUser?.pin) || localUser?.pin !== remoteUser?.pin) {
 			router.push({ pathname: "/pin-auth", params: { username } });
 		} else if (!localUser?.pin && !remoteUser?.pin) {
 			router.push({
@@ -56,23 +51,33 @@ export function useBootstrapUser() {
 			setIsLoading(true);
 			const trimmedUsername = username.trim();
 			await usersService.saveUsername(trimmedUsername);
+			const {
+				user,
+				localUser: storeLocalUser,
+				remoteUser: storeRemoteUser,
+			} = useUserStore.getState();
+			console.log("trimmedUsername", trimmedUsername, username);
+			console.log("user.username", user?.username);
+			console.log("storeLocalUser.username", storeLocalUser?.username);
+			console.log("storeRemoteUser.username", storeRemoteUser?.username);
 
 			if (
 				storeLocalUser &&
 				storeRemoteUser &&
+				trimmedUsername === user?.username &&
 				trimmedUsername === storeLocalUser.username &&
 				trimmedUsername === storeRemoteUser?.username
 			) {
-				return forwardNextScreen(
-					storeLocalUser,
-					storeRemoteUser,
-					trimmedUsername,
-					manualRedirect
-				);
+				console.log("forwarding to next screen", trimmedUsername);
+				return forwardNextScreen(storeLocalUser, storeRemoteUser, trimmedUsername, manualRedirect);
 			}
 
-			const localUser = await usersService.getLocalUser(trimmedUsername);
-			const remoteUser = await usersService.getUser(trimmedUsername);
+			const [localUser, remoteUser] = await Promise.all([
+				usersService.getLocalUser(trimmedUsername),
+				usersService.getUser(trimmedUsername),
+			]);
+			console.log("localUser", localUser?.username);
+			console.log("remoteUser", remoteUser?.username);
 
 			// Merge users: pick the latest
 			let finalUser = localUser;
@@ -103,7 +108,7 @@ export function useBootstrapUser() {
 
 			forwardNextScreen(localUser, remoteUser, trimmedUsername, manualRedirect);
 		},
-		[router, setUser, redirectedToSadhana, setRedirectedToSadhana]
+		[router, setUser, redirectedToSadhana, setRedirectedToSadhana],
 	);
 
 	return { bootstrap, isLoading };
