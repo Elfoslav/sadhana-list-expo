@@ -43,9 +43,11 @@ export default function DraggableList({
 				<Text style={styles.dropdownItemText}>{item.username}</Text>
 			</TouchableOpacity>
 
-			<TouchableOpacity onPressIn={drag} style={styles.dragHandle}>
-				<Text style={styles.dragIcon}>☰</Text>
-			</TouchableOpacity>
+			{variant === "inline" && onDragEnd && (
+				<TouchableOpacity onPressIn={drag} style={styles.dragHandle}>
+					<Text style={styles.dragIcon}>☰</Text>
+				</TouchableOpacity>
+			)}
 
 			{variant === "inline" && onDeleteUser && (
 				<TouchableOpacity style={styles.deleteButton} onPress={() => onDeleteUser(item)}>
