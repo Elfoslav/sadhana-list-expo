@@ -5,6 +5,7 @@ import { useUserStore } from "../stores/useUserStore";
 import { usersService } from "../services/usersServiceInstance";
 import SettingsService from "../services/SettingsService";
 import User from "../models/User";
+import { timestampToMillis } from "../lib/functions";
 
 export function useBootstrapUser() {
 	const router = useRouter();
@@ -56,10 +57,6 @@ export function useBootstrapUser() {
 				localUser: storeLocalUser,
 				remoteUser: storeRemoteUser,
 			} = useUserStore.getState();
-			console.log("trimmedUsername", trimmedUsername, username);
-			console.log("user.username", user?.username);
-			console.log("storeLocalUser.username", storeLocalUser?.username);
-			console.log("storeRemoteUser.username", storeRemoteUser?.username);
 
 			if (
 				storeLocalUser &&
@@ -76,8 +73,8 @@ export function useBootstrapUser() {
 				usersService.getLocalUser(trimmedUsername),
 				usersService.getUser(trimmedUsername),
 			]);
-			console.log("localUser", localUser?.username);
-			console.log("remoteUser", remoteUser?.username);
+			console.log("localUser", localUser?.username, localUser?.updatedAt);
+			console.log("remoteUser", remoteUser?.username, remoteUser?.updatedAt);
 
 			// Merge users: pick the latest
 			let finalUser = localUser;
@@ -85,8 +82,8 @@ export function useBootstrapUser() {
 			else if (
 				remoteUser &&
 				remoteUser.updatedAt &&
-				finalUser.updatedAt &&
-				remoteUser.updatedAt > finalUser.updatedAt
+				timestampToMillis(remoteUser.updatedAt) >
+					timestampToMillis(finalUser.updatedAt || { seconds: 0, nanoseconds: 0 })
 			) {
 				finalUser = remoteUser;
 			}

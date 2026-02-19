@@ -1,4 +1,5 @@
-import { encryptPin } from "../lib/functions";
+import { Timestamp } from "firebase/firestore";
+import { encryptPin, timestampToMillis } from "../lib/functions";
 import User from "../models/User";
 import UserAsyncStore from "../stores/UserAsyncStore";
 import UserFirestore from "../stores/UserFirestore";
@@ -32,20 +33,32 @@ class UsersService {
 		try {
 			const networkState = await Network.getNetworkStateAsync();
 			const isConnected =
-				networkState.isConnected === true &&
-				networkState.isInternetReachable === true;
+				networkState.isConnected === true && networkState.isInternetReachable === true;
 
 			// Load user from firebase only when connected to the internet
 			if (isConnected) {
-				const user = (await this.userFirestore.getUser(
-					username
-				)) as User | null; // Set User type instead of DocumentData from Firebase
-				const localUser = await this.userStore.getUser(username);
+				const user = await this.getRemoteUser(username);
+				const localUser = await this.getLocalUser(username);
 
 				const userSadhanaLength = user?.sadhanaData?.length ?? 0;
 				const localUserSadhanaLength = localUser?.sadhanaData?.length ?? 0;
+				const userUpdatedAt = user?.updatedAt ? timestampToMillis(user?.updatedAt) : 0;
+				const localUserUpdatedAt = localUser?.updatedAt
+					? timestampToMillis(localUser?.updatedAt)
+					: 0;
 
-				return userSadhanaLength > localUserSadhanaLength ? user : localUser;
+				console.log("userSadhanaLength", userSadhanaLength);
+				console.log(
+					"localUserSadhanaLength",
+					localUserSadhanaLength,
+					localUser?.username,
+					localUser?.sadhanaData,
+				);
+				console.log("userUpdatedAt", userUpdatedAt);
+				console.log("localUserUpdatedAt", localUserUpdatedAt);
+				return userSadhanaLength >= localUserSadhanaLength && userUpdatedAt >= localUserUpdatedAt
+					? user
+					: localUser;
 			}
 
 			return await this.userStore.getUser(username);
@@ -57,7 +70,7 @@ class UsersService {
 
 	async getRemoteUser(username?: string) {
 		try {
-			return (await this.userFirestore.getUser(username)) as User | null;
+			return (await this.userFirestore.getUser(username)) as User | null; // Set User type instead of DocumentData from Firebase
 		} catch (error) {
 			console.error("Error in getUser:", error);
 			return await this.userStore.getUser(username); // fallback
@@ -77,8 +90,8 @@ class UsersService {
 	async saveUser(user: User) {
 		try {
 			const networkState = await Network.getNetworkStateAsync();
-			const isConnected =
-				networkState.isConnected && networkState.isInternetReachable;
+			const isConnected = networkState.isConnected && networkState.isInternetReachable;
+			user.updatedAt = Timestamp.now();
 
 			if (isConnected) {
 				console.log("saving user in Firebase: ", user.username);

@@ -168,3 +168,7 @@ export const redirectToUserSadhana = (username: string, readOnly?: boolean) => {
 		},
 	});
 };
+
+export function timestampToMillis(ts: { seconds: number; nanoseconds: number }) {
+	return ts.seconds * 1000 + ts.nanoseconds / 1_000_000;
+}

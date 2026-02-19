@@ -42,6 +42,7 @@ class UserAsyncStore {
 	// Method to write user data
 	async saveUser(user: User) {
 		try {
+			console.log("UserAsyncStore.saveUser user: ", user.updatedAt);
 			await AsyncStorage.setItem(user.username, JSON.stringify(user));
 		} catch (error) {
 			console.log("saveUser error", error);
