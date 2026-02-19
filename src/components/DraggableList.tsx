@@ -5,6 +5,7 @@ import User from "../models/User";
 
 type Props = {
 	users: User[];
+	highlightedItem?: string;
 	onSelectUser: (user: User) => void;
 	onDeleteUser?: (user: User) => void;
 	onDragEnd?: (users: User[]) => void;
@@ -14,6 +15,7 @@ type Props = {
 
 export default function DraggableList({
 	users,
+	highlightedItem,
 	onSelectUser,
 	onDeleteUser,
 	onDragEnd,
@@ -37,25 +39,32 @@ export default function DraggableList({
 		}
 	};
 
-	const renderItem = ({ item, drag, isActive }: RenderItemParams<User>) => (
-		<View style={[styles.itemContainer, isActive && { backgroundColor: "#eee" }]}>
-			<TouchableOpacity style={styles.itemTextContainer} onPress={() => onSelectUser(item)}>
-				<Text style={styles.dropdownItemText}>{item.username}</Text>
-			</TouchableOpacity>
+	const renderItem = ({ item, drag, isActive }: RenderItemParams<User>) => {
+		const isHighlighted = item.username === highlightedItem;
+		console.log("isHighlighted", isHighlighted, highlightedItem);
 
-			{variant === "inline" && onDragEnd && (
-				<TouchableOpacity onPressIn={drag} style={styles.dragHandle}>
-					<Text style={styles.dragIcon}>☰</Text>
+		return (
+			<View
+				style={[styles.itemContainer, (isActive || isHighlighted) && { backgroundColor: "#eee" }]}
+			>
+				<TouchableOpacity style={styles.itemTextContainer} onPress={() => onSelectUser(item)}>
+					<Text style={styles.dropdownItemText}>{item.username}</Text>
 				</TouchableOpacity>
-			)}
 
-			{variant === "inline" && onDeleteUser && (
-				<TouchableOpacity style={styles.deleteButton} onPress={() => onDeleteUser(item)}>
-					<Text style={styles.deleteButtonText}>❌</Text>
-				</TouchableOpacity>
-			)}
-		</View>
-	);
+				{variant === "inline" && onDragEnd && (
+					<TouchableOpacity onPressIn={drag} style={styles.dragHandle}>
+						<Text style={styles.dragIcon}>☰</Text>
+					</TouchableOpacity>
+				)}
+
+				{variant === "inline" && onDeleteUser && (
+					<TouchableOpacity style={styles.deleteButton} onPress={() => onDeleteUser(item)}>
+						<Text style={styles.deleteButtonText}>❌</Text>
+					</TouchableOpacity>
+				)}
+			</View>
+		);
+	};
 
 	return (
 		<DraggableFlatList
@@ -88,7 +97,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 4,
 		backgroundColor: "#fff",
-		maxHeight: 300,
+		maxHeight: 290,
 		minHeight: 50,
 	},
 	itemContainer: {

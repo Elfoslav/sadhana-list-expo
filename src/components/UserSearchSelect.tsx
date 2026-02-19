@@ -69,7 +69,7 @@ export default function UserSearchSelect({
 			let fetchedUsers = await fetchUsers(searchText);
 			// Remove exact match with current input to avoid duplicates
 			fetchedUsers = fetchedUsers.filter(
-				(u) => u.username.toLowerCase() !== searchText.toLowerCase()
+				(u) => u.username.toLowerCase() !== searchText.toLowerCase(),
 			);
 			setUsers(fetchedUsers);
 			setShowDropdown(true);
@@ -88,13 +88,7 @@ export default function UserSearchSelect({
 				style={[commonStyles.textInput, style.input]}
 			/>
 
-			{loading && (
-				<ActivityIndicator
-					size="small"
-					color="#555"
-					style={styles.loadingIndicator}
-				/>
-			)}
+			{loading && <ActivityIndicator size="small" color="#555" style={styles.loadingIndicator} />}
 
 			{showDropdown && !userSelected && !loading && users.length > 0 && (
 				<DraggableList users={users} onSelectUser={onUserSelect} />

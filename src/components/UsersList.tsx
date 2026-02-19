@@ -6,6 +6,7 @@ import { View } from "react-native";
 
 type UsersListPropps = {
 	users: User[];
+	highlightedItem?: string;
 	onSelectUser: (user: User) => void;
 	onDeleteUser: (user: User) => void;
 	onDragEnd: (users: User[]) => void;
@@ -13,6 +14,7 @@ type UsersListPropps = {
 
 export default function UsersList({
 	users,
+	highlightedItem,
 	onSelectUser,
 	onDeleteUser,
 	onDragEnd,
@@ -25,6 +27,7 @@ export default function UsersList({
 				<View style={{ marginTop: 20 }}>
 					<DraggableList
 						users={users}
+						highlightedItem={highlightedItem}
 						onSelectUser={onSelectUser}
 						onDeleteUser={onDeleteUser}
 						onDragEnd={onDragEnd}

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { useRouter, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { View, StyleSheet, StatusBar, useColorScheme, Image, Alert, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import commonStyles from "../styles/commonStyles";
@@ -8,7 +8,6 @@ import Button from "../components/ui/Button";
 import UserSearchSelect from "../components/UserSearchSelect";
 import OtherUsersStore from "../stores/OtherUsersStore";
 import User from "../models/User";
-import DraggableList from "../components/DraggableList";
 import { Colors } from "../lib/colors";
 import { useDeleteUser } from "../hooks/useDeleteUser";
 import { redirectToUserSadhana } from "../lib/functions";
@@ -16,7 +15,6 @@ import UsersList from "../components/UsersList";
 
 function OtherUsersView() {
 	const insets = useSafeAreaInsets();
-	const router = useRouter();
 	const [username, setUsername] = useState("");
 	const [users, setUsers] = useState<User[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -121,6 +119,7 @@ function OtherUsersView() {
 
 			<UsersList
 				users={users}
+				highlightedItem={username}
 				onSelectUser={(user) => redirectToUserSadhana(user.username, true)}
 				onDeleteUser={deleteUser}
 				onDragEnd={onDragEnd}

@@ -102,6 +102,7 @@ function HomeView() {
 
 			<UsersList
 				users={users}
+				highlightedItem={username}
 				onSelectUser={onSelectUser}
 				onDeleteUser={deleteUser}
 				onDragEnd={onDragEnd}
