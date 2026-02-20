@@ -79,10 +79,10 @@ const SadhanaListView: React.FC = () => {
 				? MINUTES_IN_DAY - bedTime + wakeUpTime // crosses midnight
 				: wakeUpTime - bedTime;
 
-		const hours = Math.floor(durationMinutes / 60);
-		const minutes = durationMinutes % 60;
+		const decimalHours = durationMinutes / 60;
 
-		return `${hours}:${String(minutes).padStart(2, "0")}`;
+		// round to 1 decimal place
+		return `${Math.round(decimalHours * 10) / 10}h`;
 	};
 
 	async function generateSadhanaList(date: Date, username: string): Promise<SadhanaData[]> {

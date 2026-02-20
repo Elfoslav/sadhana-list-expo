@@ -9,9 +9,9 @@ import UserSearchSelect from "../components/UserSearchSelect";
 import OtherUsersStore from "../stores/OtherUsersStore";
 import User from "../models/User";
 import { Colors } from "../lib/colors";
-import { useDeleteUser } from "../hooks/useDeleteUser";
 import { redirectToUserSadhana } from "../lib/functions";
 import UsersList from "../components/UsersList";
+import { useDeleteUser } from "../hooks/useDeleteUser";
 
 function OtherUsersView() {
 	const insets = useSafeAreaInsets();
@@ -39,7 +39,7 @@ function OtherUsersView() {
 		setUsers(await OtherUsersStore.getAll());
 	};
 
-	const deleteUser = useDeleteUser(OtherUsersStore, reloadUsers);
+	const { promptDeleteUser, deleteModal } = useDeleteUser(OtherUsersStore, reloadUsers);
 
 	const onDragEnd = async (users: User[]) => {
 		console.log(users);
@@ -121,9 +121,11 @@ function OtherUsersView() {
 				users={users}
 				highlightedItem={username}
 				onSelectUser={(user) => redirectToUserSadhana(user.username, true)}
-				onDeleteUser={deleteUser}
+				onDeleteUser={promptDeleteUser}
 				onDragEnd={onDragEnd}
 			/>
+
+			{deleteModal}
 		</View>
 	);
 }

@@ -10,7 +10,6 @@ import UsersStore from "../stores/UsersStore";
 import User from "../models/User";
 import UsersList from "../components/UsersList";
 import { useDeleteUser } from "../hooks/useDeleteUser";
-import { redirectToUserSadhana } from "../lib/functions";
 
 function HomeView() {
 	const insets = useSafeAreaInsets();
@@ -70,7 +69,7 @@ function HomeView() {
 		bootstrap(user.username, true);
 	};
 
-	const deleteUser = useDeleteUser(UsersStore, reloadUsers);
+	const { promptDeleteUser, deleteModal } = useDeleteUser(UsersStore, reloadUsers);
 
 	const onDragEnd = async (users: User[]) => {
 		console.log(users);
@@ -104,9 +103,11 @@ function HomeView() {
 				users={users}
 				highlightedItem={username}
 				onSelectUser={onSelectUser}
-				onDeleteUser={deleteUser}
+				onDeleteUser={promptDeleteUser}
 				onDragEnd={onDragEnd}
 			/>
+
+			{deleteModal}
 		</View>
 	);
 }
