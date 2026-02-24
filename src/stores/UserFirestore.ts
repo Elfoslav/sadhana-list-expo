@@ -98,7 +98,7 @@ class UserFirestore {
 		try {
 			const userRef = doc(db, "users", user.username);
 			const userDoc: FirestoreUser = {
-				username: user.username,
+				...user,
 				sadhanaData: JSON.stringify(user.sadhanaData),
 				updatedAt: Timestamp.now(),
 			};
