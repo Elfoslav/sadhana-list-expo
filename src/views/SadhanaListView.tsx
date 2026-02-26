@@ -8,8 +8,8 @@ import {
 	TextInput,
 	KeyboardAvoidingView,
 	Platform,
+	FlatList,
 } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import UsersService from "../services/UsersService";
 import SadhanaData from "../models/SadhanaData";
 import User from "../models/User";
@@ -41,7 +41,7 @@ const SadhanaListView: React.FC = () => {
 		return <Text>No username provided</Text>;
 	}
 
-	const listRef = useRef<KeyboardAwareFlatList>(null);
+	const listRef = useRef<FlatList>(null);
 	const usersService = new UsersService();
 	const sadhanaManager = new SadhanaManager();
 	const initialDate = new Date();
@@ -221,10 +221,12 @@ const SadhanaListView: React.FC = () => {
 
 	// Scroll to today's item after mounting
 	useEffect(() => {
-		setTimeout(() => {
-			listRef.current?.scrollToPosition(0, y);
-		}, 100); // delay ensures FlatList is rendered
-	}, [todayIndex, y]);
+		if (todayIndex >= 0) {
+			setTimeout(() => {
+				listRef.current?.scrollToIndex({ index: todayIndex, animated: true });
+			}, 100); // delay ensures FlatList is rendered
+		}
+	}, [todayIndex]);
 
 	const shortenString = (text: string, num: number) => {
 		const shortenedText = text.slice(0, num);
@@ -385,7 +387,7 @@ const SadhanaListView: React.FC = () => {
 					style={{ flex: 1 }}
 					behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS needs padding, Android height
 				>
-					<KeyboardAwareFlatList
+					<FlatList
 						ref={listRef}
 						data={sadhanaList}
 						renderItem={renderItem}
@@ -396,7 +398,10 @@ const SadhanaListView: React.FC = () => {
 						keyboardDismissMode="on-drag"
 						// contentContainerStyle={{ paddingBottom: 200 }}
 						onScrollToIndexFailed={({ index, averageItemLength }) => {
-							listRef.current?.scrollToPosition(0, averageItemLength * index);
+							listRef.current?.scrollToOffset({
+								offset: averageItemLength * index,
+								animated: true,
+							});
 						}}
 					/>
 				</KeyboardAvoidingView>
